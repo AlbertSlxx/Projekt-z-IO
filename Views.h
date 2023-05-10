@@ -2,17 +2,19 @@
 #ifndef VIEWS_H
 #define VIEWS_H
 #include <string>
+
+
 class View {
 public:
     //game
     virtual void OneOptionToMoveOn() = 0;
-    virtual void TwoOpitonsToMoveOn() = 0;
+    virtual void TwoOptionsToMoveOn() = 0;
 
 
     //chambers
     virtual void OptionsForGoNext(int i) = 0;
     virtual void NotRecognizedCharacter() = 0;
-    virtual void GameSuccesfullFinished() = 0;
+    virtual void GameSuccessfulFinished() = 0;
     virtual void GameAlmostFinished() = 0;
 
 
@@ -41,7 +43,7 @@ public:
     virtual void GoldFoundInChest(int i) = 0;
     virtual void ItemFoundInChest() = 0;
     virtual void ShowItemToChange() = 0;
-    virtual void DecisiontToReplaceItem() = 0;
+    virtual void DecisionToReplaceItem() = 0;
 
     virtual void CheckStatisticsOrEquipment() = 0;
 
@@ -92,7 +94,7 @@ public:
 
 
     //strategy
-    virtual void NotEnoughtGoldToBuyItem() = 0;
+    virtual void NotEnoughGoldToBuyItem() = 0;
     virtual void MuchTooLowOfferForItem() = 0;
     virtual void FairPriceOfferForItem() = 0;
     virtual void AlmostFairPriceOfferForItem(int offer) = 0;
@@ -107,19 +109,19 @@ public:
 
     virtual void ShowPossibleClassesToChoose(string name) = 0;
     virtual void IncorrectNumber(int min, int max) = 0;
-    virtual void ShowChoosenClass(int ch) = 0;
+    virtual void ShowChosenClass(int ch) = 0;
 
     virtual void WriteHeroName() = 0;
 
-    virtual void ShowEqiupment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue
-        , string talismanName, string talismanMainStatName, int talismanMainStat, int talismanCrit, int talismanValue
-        , string armorName, int armorDef, int armorHealth, int armorValue,
-        string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainstat,
-        string shieldName, int shieldDef, int shieldBlockChance, int shieldValue) = 0;
+    virtual void ShowEquipment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
+                               string talismanName, string talismanMainStatName, int talismanMainStat, double talismanCrit, int talismanValue,
+                               string armorName, int armorDef, int armorHealth, int armorValue,
+                               string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainStat,
+                               string shieldName, int shieldDef, double shieldBlockChance, int shieldValue) = 0;
     virtual void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
-        int maxAttack, double crit, int def, int money, double block = 0.) = 0;
+                                int maxAttack, double crit, int def, int money, double block) = 0;
 
-    virtual void ShowOneItem(string type, string prof, int value, string name, int val1, int val2, int val3,string mainStatName) = 0;
+    virtual void ShowOneItem(string type, string prof, int value, string name, double val1, double val2, double val3, string mainStatName) = 0;
 
     virtual void CompletedEqChanging() = 0;
     virtual void BreakLine() = 0;
@@ -131,122 +133,122 @@ public:
     TXTView();
 
     //game
-    void OneOptionToMoveOn();
-    void TwoOpitonsToMoveOn();
+    void OneOptionToMoveOn() override;
+    void TwoOptionsToMoveOn() override;
 
 
     //chambers
-    void OptionsForGoNext(int i);
-    void NotRecognizedCharacter();
-    void GameSuccesfullFinished() ;
-    void GameAlmostFinished();
+    void OptionsForGoNext(int i) override;
+    void NotRecognizedCharacter() override;
+    void GameSuccessfulFinished() override;
+    void GameAlmostFinished() override;
 
 
     //events
-    void DescriptionEndPoint();
-    void DescriptionEnterToMonsterRoom();
-    void DescriptionFight();
-    void DescriptionRunAway();
-    void DescriptionCheckChest();
-    void DescriptionEnterToTrapRoom();
-    void DescriptionActiveTheTrap();
-    void DescriptionEnterToPotionRoom();
-    void DescriptionDrinkPotion();
-    void DescriptionEnterToTreasureRoom();
-    void DescriptionEnterToHealthRoom();
-    void DescriptionHealthYourself();
-    void DescriptionEnterToTraderRoom();
-    void DescriptionSeeItems();
-    void DescriptionEnterToEmptyRoom();
-    void DescriptionEnterToStartingRoom();
-    void DescriptionEnterToBossRoom();
-    void DescriptionBossFight();
+    void DescriptionEndPoint() override;
+    void DescriptionEnterToMonsterRoom() override;
+    void DescriptionFight() override;
+    void DescriptionRunAway() override;
+    void DescriptionCheckChest() override;
+    void DescriptionEnterToTrapRoom() override;
+    void DescriptionActiveTheTrap() override;
+    void DescriptionEnterToPotionRoom() override;
+    void DescriptionDrinkPotion() override;
+    void DescriptionEnterToTreasureRoom() override;
+    void DescriptionEnterToHealthRoom() override;
+    void DescriptionHealthYourself() override;
+    void DescriptionEnterToTraderRoom() override;
+    void DescriptionSeeItems() override;
+    void DescriptionEnterToEmptyRoom() override;
+    void DescriptionEnterToStartingRoom() override;
+    void DescriptionEnterToBossRoom() override;
+    void DescriptionBossFight() override;
 
-    void GoldFoundInChest(int i);
-    void ItemFoundInChest();
-    void ShowItemToChange();
-    void DecisiontToReplaceItem();
+    void GoldFoundInChest(int i) override;
+    void ItemFoundInChest() override;
+    void ShowItemToChange() override;
+    void DecisionToReplaceItem() override;
 
-    void CheckStatisticsOrEquipment();
+    void CheckStatisticsOrEquipment() override;
 
-    void EnteredToMonsterRoom();
-    void ShowCurrentHealth(int curr, int max);
-    void MonsterDefeated();
-    void RemainingHealth(int curr);
-    void LevelUp(int lvl);
-    void EscapeWithBeingHit();
-    void EscapeWithoutBeingHit();
-    void ChestFound();
+    void EnteredToMonsterRoom() override;
+    void ShowCurrentHealth(int curr, int max) override;
+    void MonsterDefeated() override;
+    void RemainingHealth(int curr) override;
+    void LevelUp(int lvl) override;
+    void EscapeWithBeingHit() override;
+    void EscapeWithoutBeingHit() override;
+    void ChestFound() override;
 
-    void EnteredToTrapRoom();
-    void HurtedByTrap();
+    void EnteredToTrapRoom() override;
+    void HurtedByTrap() override;
 
-    void EnteredToPotionRoom();
-    void HealthRestoredByPotion();
-    void HealthLostByPoisonedPotion(int lost);
+    void EnteredToPotionRoom() override;
+    void HealthRestoredByPotion() override;
+    void HealthLostByPoisonedPotion(int lost) override;
 
-    void EnteredToTreasureRoom();
+    void EnteredToTreasureRoom() override;
 
-    void EnteredToHealthRoom();
-    void HealthRestoredByMagicFountain();
+    void EnteredToHealthRoom() override;
+    void HealthRestoredByMagicFountain() override;
 
-    void EnteredToTraderRoom();
-    void ShowMerchantItemWithPrice(int num, int price);
-    void ShowGoldBalance(int bal);
-    void DecisionToBuySomething();
-    void SelectNumberOfItemToBuy();
-    void SelectedItemHasAlreadyBeenBought();
-    void InvalidItemNumber();
-    void DecisionToBuyingAnotherItem();
-    void AllItemsHaveAlreadyBeenBought();
-    void DecisionToNegotiateItemPrice();
-    void PriceOfferForItem();
+    void EnteredToTraderRoom() override;
+    void ShowMerchantItemWithPrice(int num, int price) override;
+    void ShowGoldBalance(int bal) override;
+    void DecisionToBuySomething() override;
+    void SelectNumberOfItemToBuy() override;
+    void SelectedItemHasAlreadyBeenBought() override;
+    void InvalidItemNumber() override;
+    void DecisionToBuyingAnotherItem() override;
+    void AllItemsHaveAlreadyBeenBought() override;
+    void DecisionToNegotiateItemPrice() override;
+    void PriceOfferForItem() override;
 
-    void EnteredToEmptyRoom();
+    void EnteredToEmptyRoom() override;
 
-    void EnteredToStartingRoom();
+    void EnteredToStartingRoom() override;
 
-    void EnteredToBossRoom();
-    void BossDefeated();
-    void HeroDefeatedByBoss();
+    void EnteredToBossRoom() override;
+    void BossDefeated() override;
+    void HeroDefeatedByBoss() override;
 
 
     //items
-    void InvalidClassValue();
+    void InvalidClassValue() override;
 
 
     //strategy
-    void NotEnoughtGoldToBuyItem();
-    void MuchTooLowOfferForItem();
-    void FairPriceOfferForItem();
-    void AlmostFairPriceOfferForItem(int offer);
-    void ShowFinalPrice(int price);
+    void NotEnoughGoldToBuyItem() override;
+    void MuchTooLowOfferForItem() override;
+    void FairPriceOfferForItem() override;
+    void AlmostFairPriceOfferForItem(int offer) override;
+    void ShowFinalPrice(int price) override;
 
 
     //character (character1, character2);
-    void ShowCourseOfRound(string ch1, string ch2, int damage);
-    void ShowCurrentHealthAfterRound(string ch, int currH);
-    void DodgedHit(string ch1, string ch2);
-    void BlockedHit(string ch1, string ch2);
+    void ShowCourseOfRound(string ch1, string ch2, int damage) override;
+    void ShowCurrentHealthAfterRound(string ch, int currH) override;
+    void DodgedHit(string ch1, string ch2) override;
+    void BlockedHit(string ch1, string ch2) override;
 
-    void ShowPossibleClassesToChoose(string name);
-    void IncorrectNumber(int min, int max);
-    void ShowChoosenClass(int ch);
+    void ShowPossibleClassesToChoose(string name) override;
+    void IncorrectNumber(int min, int max) override;
+    void ShowChosenClass(int ch) override;
 
-    void WriteHeroName();
+    void WriteHeroName() override;
 
-    void ShowEqiupment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
-        string talismanName, string talismanMainStatName, int talismanMainStat, int talismanCrit, int talismanValue,
-        string armorName, int armorDef, int armorHealth, int armorValue,
-        string headGearName, int headGearDef, int headGearVal=0, int headgearValue=0, string headGearMainstat="",
-        string shieldName="", int shieldDef = 0, int shieldBlockChance = 0, int shieldValue = 0);
+    void ShowEquipment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
+                       string talismanName, string talismanMainStatName, int talismanMainStat, double talismanCrit, int talismanValue,
+                       string armorName, int armorDef, int armorHealth, int armorValue,
+                       string headGearName, int headGearDef, int headGearVal = 0, int headgearValue = 0, string headGearMainStat = "",
+                       string shieldName = "", int shieldDef = 0, double shieldBlockChance = 0, int shieldValue = 0) override;
     void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
-        int maxAttack, double crit, int def, int money, double block = 0.);
+                        int maxAttack, double crit, int def, int money, double block) override;
 
-    void ShowOneItem(string type, string prof, int value, string name, int val1=0, int val2=0, int val3=0, string mainStatName="");
+    void ShowOneItem(string type, string prof, int value, string name, double val1 = 0, double val2 = 0, double val3 = 0, string mainStatName = "") override;
 
-    void CompletedEqChanging();
-    void BreakLine();
-    void EndGameMessage();
+    void CompletedEqChanging() override;
+    void BreakLine() override;
+    void EndGameMessage() override;
 };
 #endif

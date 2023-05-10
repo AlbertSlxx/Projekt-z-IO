@@ -1,6 +1,6 @@
 #include "Character.h"
 #include <thread>
-
+#include <utility>
 
 
 const int defaultHealth = 50;
@@ -15,42 +15,39 @@ const int defaultHealthMonster = 80;
 const int defaultAttackMonsterMin = 20;
 const int defaultAttackMonsterMax = 50;
 
-Character::Character() {
 
-}
-Character::~Character() {
+Character::Character() = default;
+Character::~Character() = default;
 
-}
-int Character::getminimalAttack()
+int Character::getMinimalAttack() const
 {
 	return this->minimalAttack;
 }
-int Character::getmaximalAttack()
+int Character::getMaximalAttack() const
 {
 	return this->maximalAttack;
 }
-int Character::getlevel()
+int Character::getLevel() const
 {
 	return this->level;
 }
-int Character::getcurrentHealth()
+int Character::getCurrentHealth() const
 {
 	return this->currentHealth;
 }
-void Character::setcurrentHealth(int h)
+void Character::setCurrentHealth(int h)
 {
-	if (h > this->getmaxHealth())
+	if (h > this->getMaxHealth())
 	{
-		h = this->getmaxHealth();
+		h = this->getMaxHealth();
 	}
 	this->currentHealth = h;
 }
-int Character::getmaxHealth()
+int Character::getMaxHealth() const
 {
 	return this->maxHealth;
 }
-
-int Character::getdefense()
+int Character::getDefense() const
 {
 	return this->defense;
 }
@@ -60,32 +57,31 @@ string Character::getName()
 }
 int Character::getDamage(int d)
 {
-	if (d >= this->getcurrentHealth())
+	if (d >= this->getCurrentHealth())
 	{
-		this->setcurrentHealth(0);
+        this->setCurrentHealth(0);
 	}
 	else
 	{
-		this->setcurrentHealth(this->getcurrentHealth() - d);
+        this->setCurrentHealth(this->getCurrentHealth() - d);
 	}
-	return this->getcurrentHealth();
+	return this->getCurrentHealth();
 }
-double Character::getcriticalChance()
+double Character::getCriticalChance() const
 {
 	return this->criticalChance;
 }
-double Character::getBlockChance()
+double Character::getBlockChance() const
 {
 	return this->blockChance;
 }
-void Character::setcriticalChance(double c)
+void Character::setCriticalChance(double c)
 {
 	this->criticalChance = c;
-	return;
 }
-int Character::useSpecialAttack()
+int Character::useSpecialAttack() const
 {
-	if (chance() <= this->getcriticalChance())
+	if (chance() <= this->getCriticalChance())
 	{
 		return 2;
 	}
@@ -95,22 +91,21 @@ Profession Character::getProf()
 {
 	return this->Class->getProf();
 }
-void Character::attackOpponent(shared_ptr<Character>& opponent, shared_ptr<View> view)
+void Character::attackOpponent(shared_ptr<Character>& opponent, const shared_ptr<View>& view)
 {
 	if (!this->useSpecialEffect(opponent, view))
 	{
 		return;
 	}
-	int damage = static_cast<int>(round(makeRand(this->getminimalAttack(), this->getmaximalAttack())));
-	damage = damage * this->useSpecialAttack() - opponent->getdefense();
+	int damage = static_cast<int>(round(makeRand(this->getMinimalAttack(), this->getMaximalAttack())));
+	damage = damage * this->useSpecialAttack() - opponent->getDefense();
 	if (damage < 1) damage = 1;
 	opponent->getDamage(damage);
 
     view->ShowCourseOfRound(this->getName(), opponent->getName(), damage);
-    view->ShowCurrentHealthAfterRound(opponent->getName(), opponent->getcurrentHealth());
-	return;
+    view->ShowCurrentHealthAfterRound(opponent->getName(), opponent->getCurrentHealth());
 }
-bool Character::useSpecialEffect(shared_ptr<Character>& opponent, shared_ptr<View> view)
+bool Character::useSpecialEffect(shared_ptr<Character>& opponent, const shared_ptr<View>& view)
 {
 	if (this->Class->getProf() == mage || opponent->Class->getProf() == mage)
 	{
@@ -137,13 +132,10 @@ bool Character::useSpecialEffect(shared_ptr<Character>& opponent, shared_ptr<Vie
 	return true;
 }
 
-CharacterClass::CharacterClass()
-{
 
-}
-CharacterClass::~CharacterClass()
-{
-}
+CharacterClass::CharacterClass() = default;
+CharacterClass::~CharacterClass() = default;
+
 Profession CharacterClass::getProf()
 {
 	return this->Prof;
@@ -151,61 +143,54 @@ Profession CharacterClass::getProf()
 void CharacterClass::setProf(Profession p)
 {
 	this->Prof = p;
-	return;
 }
-int CharacterClass::getattackModifier()
+int CharacterClass::getAttackModifier() const
 {
 	return this->attackModifier;
 }
-void CharacterClass::setattackModifier(int am)
+void CharacterClass::setAttackModifier(int am)
 {
 	this->attackModifier = am;
-	return;
 }
-int CharacterClass::getdefenseModifier()
+int CharacterClass::getDefenseModifier() const
 {
 	return this->defenseModifier;
 }
-void CharacterClass::setdefenseModifier(int dm)
+void CharacterClass::setDefenseModifier(int dm)
 {
 	this->defenseModifier = dm;
-	return;
 }
-int CharacterClass::getmainStat()
+int CharacterClass::getMainStat() const
 {
 	return this->mainStat;
 }
-void CharacterClass::setmainStat(int ms)
+void CharacterClass::setMainStat(int ms)
 {
 	this->mainStat = ms;
-	return;
 }
-int CharacterClass::getvitalityModifier()
+int CharacterClass::getVitalityModifier() const
 {
 	return this->vitalityModifier;
 }
-void CharacterClass::setvitalityModifier(int vm)
+void CharacterClass::setVitalityModifier(int vm)
 {
 	this->vitalityModifier = vm;
-	return;
 }
-string CharacterClass::getspecialAbility()
+string CharacterClass::getSpecialAbility()
 {
 	return this->SpecialAbility;
 }
-void CharacterClass::setspecialAbility(string sa)
+void CharacterClass::setSpecialAbility(string sa)
 {
-	this->SpecialAbility = sa;
-	return;
+	this->SpecialAbility = std::move(sa);
 }
-string CharacterClass::getmainStatName()
+string CharacterClass::getMainStatName()
 {
 	return this->mainStatName;
 }
-void CharacterClass::setmainStatName(string sm)
+void CharacterClass::setMainStatName(string sm)
 {
-	this->mainStatName = sm;
-	return;
+	this->mainStatName = std::move(sm);
 }
 string CharacterClass::getProfName()
 {
@@ -227,47 +212,45 @@ string CharacterClass::getProfName()
 	}
 }
 
+
 Scout::Scout()
 {
-	this->setattackModifier(2);
-	this->setdefenseModifier(2);
-	this->setvitalityModifier(2);
+    this->setAttackModifier(2);
+    this->setDefenseModifier(2);
+    this->setVitalityModifier(2);
 	this->setProf(scout);
-	this->setmainStat(10);
-	this->setspecialAbility("You have 33 percent chance to dodge your opponent's attack");
-	this->setmainStatName("Agility");
+    this->setMainStat(10);
+    this->setSpecialAbility("You have 33 percent chance to dodge your opponent's attack");
+    this->setMainStatName("Agility");
 }
-Scout::~Scout()
-{
+Scout::~Scout() = default;
 
-}
 Warrior::Warrior()
 {
 
-	this->setattackModifier(1);
-	this->setdefenseModifier(4);
-	this->setvitalityModifier(4);
+    this->setAttackModifier(1);
+    this->setDefenseModifier(4);
+    this->setVitalityModifier(4);
 	this->setProf(warrior);
-	this->setmainStat(5);
-	this->setspecialAbility("You have shield, which is able to block your opponent's attacks");
-	this->setmainStatName("Strength");
+    this->setMainStat(5);
+    this->setSpecialAbility("You have shield, which is able to block your opponent's attacks");
+    this->setMainStatName("Strength");
 }
-Warrior::~Warrior()
-{
-}
+Warrior::~Warrior() = default;
+
 Mage::Mage()
 {
-	this->setattackModifier(4);
-	this->setdefenseModifier(1);
-	this->setvitalityModifier(1);
+    this->setAttackModifier(4);
+    this->setDefenseModifier(1);
+    this->setVitalityModifier(1);
 	this->setProf(mage);
-	this->setmainStat(20);
-	this->setspecialAbility("Opponent is not able to block your attack");
-	this->setmainStatName("Intelligence");
+    this->setMainStat(20);
+    this->setSpecialAbility("Opponent is not able to block your attack");
+    this->setMainStatName("Intelligence");
 }
-Mage::~Mage()
-{
-}
+Mage::~Mage() = default;
+
+
 void monster::chooseClass()
 {
 	int p = static_cast<int>(round(makeRand(1, 3)));
@@ -284,21 +267,18 @@ void monster::chooseClass()
 		this->Class = make_unique<Mage>();
 	}
 }
-void monster::setmaxHealth()
+void monster::setMaxHealth()
 {
-	this->maxHealth = defaultHealthMonster * this->getlevel()*this->Class->getvitalityModifier();
-	this->setcurrentHealth(this->maxHealth);
-	return;
+	this->maxHealth = defaultHealthMonster * this->getLevel() * this->Class->getVitalityModifier();
+    this->setCurrentHealth(this->maxHealth);
 }
-void monster::setdefense()
+void monster::setDefense()
 {
-	this->defense = defaultMonsterDefense * this->getlevel()*this->Class->getdefenseModifier();
-	return;
+	this->defense = defaultMonsterDefense * this->getLevel() * this->Class->getDefenseModifier();
 }
-void monster::setlevel(int l)
+void monster::setLevel(int l)
 {
 	this->level = l;
-	return;
 }
 void monster::setBlockChance()
 {
@@ -310,32 +290,27 @@ void monster::setBlockChance()
 	{
 		this->blockChance = 0.;
 	}
-	return;
 }
-void monster::setminimalAttack()
+void monster::setMinimalAttack()
 {
-	this->minimalAttack = defaultAttackMonsterMin * this->getlevel()*this->Class->getattackModifier();
-	return;
+	this->minimalAttack = defaultAttackMonsterMin * this->getLevel() * this->Class->getAttackModifier();
 }
-void monster::setmaximalAttack()
+void monster::setMaximalAttack()
 {
-	this->maximalAttack = defaultAttackMonsterMax * this->getlevel()*this->Class->getattackModifier();
-	return;
+	this->maximalAttack = defaultAttackMonsterMax * this->getLevel() * this->Class->getAttackModifier();
 }
 void monster::setName(bool p)
 {
 	if (!p)
 	{
-		int r = static_cast<int>(round(makeRand(0, sizenamesforMonsters-1)));
-		this->name = namesforMonsters[r];
+		int rd = static_cast<int>(round(makeRand(0, sizeNamesForMonsters - 1)));
+		this->name = namesForMonsters[rd];
 	}
 	else
 	{
-		int r = static_cast<int>(round(makeRand(0, sizenamesforBosses - 1)));
-		this->name = namesforBosses[r];
+		int rd = static_cast<int>(round(makeRand(0, sizeNamesForBosses - 1)));
+		this->name = namesForBosses[rd];
 	}
-	
-	return;
 }
 monster::monster(int lvl,bool p)
 {
@@ -346,16 +321,15 @@ monster::monster(int lvl,bool p)
 void monster::setALL(int lvl)
 {
 	this->chooseClass();
-	this->setlevel(lvl);
-	this->setmaxHealth();
-	this->setdefense();
-	this->setminimalAttack();
-	this->setmaximalAttack();
-	this->setcriticalChance(defaultMonsterCriticalChance);
+    this->setLevel(lvl);
+    this->setMaxHealth();
+    this->setDefense();
+    this->setMinimalAttack();
+    this->setMaximalAttack();
+    this->setCriticalChance(defaultMonsterCriticalChance);
 }
-monster::~monster()
-{
-}
+monster::~monster() = default;
+
 
 shared_ptr<Hero> Hero::hero = nullptr;
 shared_ptr<Hero>& Hero::getInstance()
@@ -368,101 +342,98 @@ shared_ptr<Hero>& Hero::getInstance()
 }
 Hero::Hero()
 {
-	//this->setName("xxx");
 	this->chooseClass(1);
-	this->setlevel(1);
+    this->setLevel(1);
 	this->setMoney(100);
-	EQ = make_unique<Equipment>(this->getlevel(), this->Class->getProf());
+	EQ = make_unique<Equipment>(this->getLevel(), this->Class->getProf());
 	this->setAllStats();
-	this->setcurrentHealth(this->getmaxHealth());
-
-
+    this->setCurrentHealth(this->getMaxHealth());
 }
-Hero::~Hero()
+Hero::~Hero() = default;
+void Hero::setCurrentHealth(int h)
 {
-}
-void Hero::setcurrentHealth(int h)
-{
-	Character::setcurrentHealth(h);
-	if(!this->getcurrentHealth())
+    Character::setCurrentHealth(h);
+	if(!this->getCurrentHealth())
 	{
 		this->Notify();
 	}
 }
-void Hero::AddObserver(shared_ptr<Observer> o)
+void Hero::AddObserver(const shared_ptr<Observer>& o)
 {
 	this->obs.push_back(o);
 }
-void Hero::DeleteObserver(shared_ptr<Observer> o)
+void Hero::DeleteObserver(const shared_ptr<Observer>& o)
 {
 	this->obs.remove(o);
 }
 void Hero::Notify()
 {
-	for(auto it= this->obs.begin();it!=this->obs.end();it++)
+	for(auto& ob : this->obs)
 	{
-		(*it)->setTrue();
+		ob->setTrue();
 	}
-
 }
 
 void Hero::chooseClass(int ch)
 {
-    if (ch == 1)
-		this->Class = make_unique<Warrior>();
-	else if (ch == 2)
-		this->Class = make_unique<Scout>();
-	else
-		this->Class = make_unique<Mage>();
+    switch (ch) {
+        case 1:
+            this->Class = make_unique<Warrior>();
+            break;
+        case 2:
+            this->Class = make_unique<Scout>();
+            break;
+        case 3:
+            this->Class = make_unique<Mage>();
+            break;
+        default:
+            throw invalid_argument("Invalid class number");
+    }
 }
-void Hero::setlevel(int s)
+void Hero::setLevel(int s)
 {
 	this->level = s;
 }
 
-void Hero::setminimalAttack(int s)
+void Hero::setMinimalAttack(int s)
 {
-	this->minimalAttack = (s + defaultAttackMin * this->getlevel())*this->Class->getattackModifier();
-	return;
+	this->minimalAttack = (s + defaultAttackMin * this->getLevel()) * this->Class->getAttackModifier();
 }
-void Hero::setmaximalAttack(int s)
+void Hero::setMaximalAttack(int s)
 {
-	this->maximalAttack = (s + defaultAttackMax * this->getlevel())*this->Class->getattackModifier();
-	return;
+	this->maximalAttack = (s + defaultAttackMax * this->getLevel()) * this->Class->getAttackModifier();
 }
 void Hero::setName(string n)
 {
-	this->name = n;
-	return;
+	this->name = std::move(n);
 }
-void Hero::levelup()
+void Hero::levelUp()
 {
 	++this->level;
 	this->setAllStats();
-	this->setcurrentHealth(this->getcurrentHealth() + double(this->getmaxHealth()*0.3));
-	return;
+    this->setCurrentHealth(this->getCurrentHealth() + int(this->getMaxHealth() * 0.3));
 }
-void Hero::showStatistics(shared_ptr<View> view)
+void Hero::showStatistics(const shared_ptr<View>& view)
 {
-    int mainStat = this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat() + this->EQ->talisman_slot->getMainStat();
+    int mainStat = this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() +
+            this->Class->getMainStat() + this->EQ->talisman_slot->getMainStat();
+
 	if (this->getProf())
 	{
-		view->ShowStatistics(this->getName(), this->Class->getProfName(), this->Class->getmainStatName(),
-			this->Class->getspecialAbility(), this->getlevel(), mainStat, this->getmaxHealth(),
-			this->getcurrentHealth(), this->getminimalAttack(), this->getmaximalAttack(),
-			this->getcriticalChance(), this->getdefense(), this->getMoney(), this->getBlockChance());
+		view->ShowStatistics(this->getName(), this->Class->getProfName(), this->Class->getMainStatName(),
+                             this->Class->getSpecialAbility(), this->getLevel(), mainStat, this->getMaxHealth(),
+                             this->getCurrentHealth(), this->getMinimalAttack(), this->getMaximalAttack(),
+                             this->getCriticalChance(), this->getDefense(), this->getMoney(), this->getBlockChance());
 	}
 	else
 	{
-		
 	}
-	return;
 }
-void Hero::showOneItem(ItemType it, Profession p, shared_ptr<View> view)
+void Hero::showOneItem(ItemType it, Profession p, const shared_ptr<View>& view)
 {
-    int val1=0, val2=0, val3=0;
-    string mainStat="", name="", type="";
-    int value=0;
+    double val1 = 0, val2 = 0, val3 = 0;
+    string mainStat, name, type;
+    int value = 0;
 
 	if (it == weapon)
 	{
@@ -480,7 +451,7 @@ void Hero::showOneItem(ItemType it, Profession p, shared_ptr<View> view)
         name = this->EQ->talisman_slot->getName();
         val1 = this->EQ->talisman_slot->getMainStat();
         val2 = this->EQ->talisman_slot->getCriticalChance();
-        mainStat = this->EQ->talisman_slot->getMainStat();
+        mainStat = this->EQ->talisman_slot->getMainStatName();
         value = this->EQ->talisman_slot->getValue();
 	}
 	else if (it == shield)
@@ -525,9 +496,8 @@ void Hero::showOneItem(ItemType it, Profession p, shared_ptr<View> view)
         proff = "Mage";
 
     view->ShowOneItem(type, proff, value, name, val1, val2, val3, mainStat);
-	return;
 }
-void Hero::showEQ(shared_ptr<View> view)
+void Hero::showEQ(const shared_ptr<View>& view)
 {
     string prof = this->Class->getProfName();
     string weaponName = this->EQ->weapon_slot->getName();
@@ -539,7 +509,7 @@ void Hero::showEQ(shared_ptr<View> view)
     string talismanName = this->EQ->talisman_slot->getName();
     string talismanMainStatName = this->EQ->headgear_slot->getMainStatName();
     int talismanMainStat = this->EQ->talisman_slot->getMainStat();
-    int talismanCrit = this->EQ->talisman_slot->getCriticalChance();
+    double talismanCrit = this->EQ->talisman_slot->getCriticalChance();
     int talismanValue = this->EQ->talisman_slot->getValue();
     string armorName = this->EQ->armor_slot->getName();
     int armorDef = this->EQ->armor_slot->getDefense();
@@ -549,16 +519,16 @@ void Hero::showEQ(shared_ptr<View> view)
     int headGearDef = this->EQ->headgear_slot->getDefense();
 	int headGearVal = this->getProf() == mage ? this->EQ->headgear_slot->getMainStat() : this->EQ->headgear_slot->getHealth();
     int headgearValue = this->EQ->headgear_slot->getValue();
-    string headGearMainstat= this->getProf() == mage ? this->EQ->headgear_slot->getMainStatName() : "";
+    string headGearMainStat = this->getProf() == mage ? this->EQ->headgear_slot->getMainStatName() : "";
     string shieldName = this->getProf() == warrior ? this->EQ->shield_slot->getName() : "";
     int shieldDef= this->getProf() == warrior ? this->EQ->shield_slot->getDefense() : 0;
-    int shieldBlockChance= this->getProf() == warrior ? this->EQ->shield_slot->getBlockChance() : 0;
+    double shieldBlockChance= this->getProf() == warrior ? this->EQ->shield_slot->getBlockChance() : 0;
     int shieldValue= this->getProf() == warrior ? this->EQ->shield_slot->getValue() : 0;
 
     if (this->getProf() == mage)
     {
         headGearVal = this->EQ->headgear_slot->getMainStat();
-        headGearMainstat = this->EQ->headgear_slot->getMainStatName();
+        headGearMainStat = this->EQ->headgear_slot->getMainStatName();
     }
     if (this->getProf() == warrior)
     {
@@ -568,111 +538,100 @@ void Hero::showEQ(shared_ptr<View> view)
         shieldValue = this->EQ->shield_slot->getValue();
     }
 
-    view->ShowEqiupment(prof, weaponName, minDamage, maxDamage, mainStateName,
+    view->ShowEquipment(prof, weaponName, minDamage, maxDamage, mainStateName,
                         weaponMainStat, weaponValue, talismanName, talismanMainStatName,
                         talismanMainStat, talismanCrit, talismanValue, armorName, armorDef,
                         armorHealth, armorValue, headGearName, headGearDef, headGearVal,
-                        headgearValue, headGearMainstat, shieldName, shieldDef,
+                        headgearValue, headGearMainStat, shieldName, shieldDef,
                         shieldBlockChance, shieldValue);
-
-	return;
 }
 void Hero::setAllStats()
 {
-	this->setmaxHealth(this->EQ->headgear_slot->getHealth() + this->EQ->armor_slot->getHealth());
-	if (this->getcurrentHealth() > this->getmaxHealth())
+    this->setMaxHealth(this->EQ->headgear_slot->getHealth() + this->EQ->armor_slot->getHealth());
+	if (this->getCurrentHealth() > this->getMaxHealth())
 	{
-		this->setcurrentHealth(this->getmaxHealth());
+        this->setCurrentHealth(this->getMaxHealth());
 	}
-	this->setcriticalChance(this->EQ->talisman_slot->getCriticalChance() + this->EQ->weapon_slot->getCriticalChance() + defaultCriticalChance * this->getlevel());
-	this->setdefense(this->EQ->armor_slot->getDefense() + this->EQ->headgear_slot->getDefense());
-	this->setAttack(this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat()+this->EQ->talisman_slot->getMainStat(), this->EQ->weapon_slot->getMinDamage(), this->EQ->weapon_slot->getMaxDamage());
+    this->setCriticalChance(this->EQ->talisman_slot->getCriticalChance() + this->EQ->weapon_slot->getCriticalChance() +
+                            defaultCriticalChance *
+                            this->getLevel());
+    this->setDefense(this->EQ->armor_slot->getDefense() + this->EQ->headgear_slot->getDefense());
+	this->setAttack(this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() +
+                            this->Class->getMainStat() + this->EQ->talisman_slot->getMainStat(), this->EQ->weapon_slot->getMinDamage(), this->EQ->weapon_slot->getMaxDamage());
 	this->setBlockChance();
-	return;
 }
-void Hero::setAttack(int ms, int weaponmin, int weaponmax)
+void Hero::setAttack(int ms, int weaponMin, int weaponMax)
 {
-	this->setminimalAttack(ms + weaponmin * counterAttackMin);
-	this->setmaximalAttack(ms + weaponmax * counterAttackMax);
-	return;
+    this->setMinimalAttack(ms + weaponMin * counterAttackMin);
+    this->setMaximalAttack(ms + weaponMax * counterAttackMax);
 }
-void Hero::setmaxHealth(int h)
+void Hero::setMaxHealth(int h)
 {
-	this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
-	//this->maxHealth = 1;
+	this->maxHealth = (this->getLevel() * defaultHealth + h) * this->Class->getVitalityModifier();
 }
-void Hero::setdefense(int d)
+void Hero::setDefense(int d)
 {
 	if (this->Class->getProf() == warrior)
 	{
 		d += this->EQ->shield_slot->getDefense();
 	}
-	this->defense = d * this->Class->getdefenseModifier();
+	this->defense = d * this->Class->getDefenseModifier();
 }
 void Hero::setBlockChance()
 {
-	if (this->Class->getProf() == warrior)
-	{
+	if (this->Class->getProf() == warrior) {
 		this->blockChance = this->EQ->shield_slot->getBlockChance();
 	}
-	else
-	{
+	else {
 		this->blockChance = 0;
 	}
-	return;
 }
 void Hero::setMoney(int m)
 {
 	this->money = m;
-	return;
 }
-int Hero::getMoney()
+int Hero::getMoney() const
 {
 	return this->money;
 }
-void Hero::ChangeEQ(shared_ptr<Item>&i, shared_ptr<View> view)
+void Hero::ChangeEQ(shared_ptr<Item>&i, const shared_ptr<View>& view)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();
 
 	view->CompletedEqChanging();
-	return;
 }
-bool Hero::fight(shared_ptr<Character>& opponent,bool boss, shared_ptr<View> view)
+bool Hero::fight(shared_ptr<Character>& opponent,bool boss, const shared_ptr<View>& view)
 {
 	bool whoIsAttacking = true;
 	chrono::milliseconds timespan(1000);
-	while (this->getcurrentHealth() != 0 && opponent->getcurrentHealth() != 0)
+	while (this->getCurrentHealth() != 0 && opponent->getCurrentHealth() != 0)
 	{
         view->BreakLine();
-		if (whoIsAttacking)
-		{
+		if (whoIsAttacking) {
 			this->attackOpponent(opponent, view);
 		}
-		else
-		{
+		else {
 			shared_ptr<Character> h = this->getInstance();
 			opponent->attackOpponent(h, view);
 		}
 		whoIsAttacking = !whoIsAttacking;
 
 		if (boss)
-		{
 			this_thread::sleep_for(timespan);
-		}
 	}
     view->BreakLine();
-	return this->getcurrentHealth() != 0;
+	return this->getCurrentHealth() != 0;
 }
 void Observer::setTrue()
 {
 	this->endik = true;
 }
-bool Observer::getEndik()
+bool Observer::getEndik() const
 {
 	return this->endik;
 }
-bool Observer::check(shared_ptr<View> view)
+bool Observer::check(const shared_ptr<View>& view)
 {
 	if (this->getEndik())
 	{

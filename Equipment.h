@@ -2,6 +2,8 @@
 #ifndef EQUIPMENT_H
 #define EQUIPMENT_H
 #include "Items.h"
+
+
 class Equipment
 {
 public:
@@ -13,7 +15,9 @@ public:
 	shared_ptr<Item> shield_slot;
 	shared_ptr<Item> headgear_slot;
 	shared_ptr<Item> talisman_slot;
+
 private:
 	unique_ptr<ItemFactory> fac;
 };
+
 #endif

@@ -1,23 +1,8 @@
 #include "Game.h"
 
-Game::Game()
-{
-}
 
-void Game::play()
-{
-    view = make_unique<TXTView>();
-
-	hero = Hero::getInstance();
-    heroSetName(view);
-    heroSetClass(view);
-
-	o = make_shared<Observer>(hero);
-	o->addToObserver();
-	shared_ptr<ChamberNode> start = prepareMap();
-
-	chamberTransitionFunction(start, view);
-}
+Game::Game() = default;
+Game::~Game() = default;
 
 shared_ptr<ChamberNode> Game::prepareMap()
 {
@@ -37,6 +22,7 @@ shared_ptr<ChamberNode> Game::prepareMap()
 	shared_ptr<ChamberNode> n13 = make_shared<ChamberNode>(make_shared<HealthRoom>());
 	shared_ptr<ChamberNode> n14 = make_shared<ChamberNode>(make_shared<TraderRoom>());
 	shared_ptr<ChamberNode> boss = make_shared<ChamberNode>(make_shared<BossChamber>());
+
 	start->option1 = n1;
 	start->option2 = n2;
 	n1->option1 = n3;
@@ -61,7 +47,7 @@ shared_ptr<ChamberNode> Game::prepareMap()
 	return start;
 }
 
-void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<View> view)
+void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
 {
 	shared_ptr<ChamberNode> curr = start;
     shared_ptr<ActionVisitor> visitor(new ActionVisitor(hero));
@@ -71,10 +57,10 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<
         curr->current->action(*visitor, view);
 
 		if (this->o->check(view))
-		{
 			break;
-		}
+
 		view->BreakLine();
+
 		if (curr->option1 == nullptr)
 			break;
 		else if (curr->option2 == nullptr)
@@ -92,7 +78,7 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<
 			curr = curr->option1;
 		}
 		else {
-			view->TwoOpitonsToMoveOn();
+            view->TwoOptionsToMoveOn();
 
 			char choice;
 			cin >> choice;
@@ -113,8 +99,9 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<
 	}
 }
 
-void Game::heroSetClass(shared_ptr<View> view) {
+void Game::heroSetClass() {
     view->ShowPossibleClassesToChoose(hero->getName());
+
     char c;
     cin >> c;
     while (c != '1' && c != '2' && c != '3')
@@ -126,16 +113,28 @@ void Game::heroSetClass(shared_ptr<View> view) {
     int ch = (int)c - 48;
     hero->chooseClass(ch);
 
-    view->ShowChoosenClass(ch);
+    view->ShowChosenClass(ch);
 }
 
-void Game::heroSetName(shared_ptr<View> view) {
+void Game::heroSetName() {
     view->WriteHeroName();
+
     string n;
     cin >> n;
     hero->setName(n);
 }
 
-Game::~Game()
+void Game::play()
 {
+    view = make_unique<TXTView>();
+
+    hero = Hero::getInstance();
+    heroSetName();
+    heroSetClass();
+
+    o = make_shared<Observer>(hero);
+    o->addToObserver();
+    shared_ptr<ChamberNode> start = prepareMap();
+
+    chamberTransitionFunction(start);
 }

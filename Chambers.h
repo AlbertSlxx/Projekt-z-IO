@@ -9,13 +9,12 @@ class ActionVisitor;
 class Chamber {
 public:
     virtual void action(ActionVisitor visitor, shared_ptr<View> view) = 0;
-	void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
 };
 
 class BossChamber : public Chamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class PassageChamber : public Chamber {};
@@ -24,55 +23,55 @@ class SafeChamber : public PassageChamber {};
 
 class MonsterRoom : public NormalChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TrapRoom : public NormalChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class PotionRoom : public NormalChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TreasureRoom : public SafeChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class HealthRoom : public SafeChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TraderRoom : public SafeChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class EmptyRoom : public SafeChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class StartingRoom : public SafeChamber {
 public:
-    void action(ActionVisitor visitor, shared_ptr<View> view);
-    shared_ptr<EventNode> prepareEventsGraph();
+    void action(ActionVisitor visitor, shared_ptr<View> view) override;
+    static shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class ChamberNode {
 public:
-	ChamberNode(shared_ptr<Chamber> curr);
+	explicit ChamberNode(shared_ptr<Chamber> curr);
 	shared_ptr<Chamber> current;
 	shared_ptr<ChamberNode> option1;
 	shared_ptr<ChamberNode> option2;
@@ -82,34 +81,34 @@ public:
 // Part of Controller
 class IVisitor {
 public:
-    virtual ~IVisitor() {}
-    virtual void visitMonsterRoom(MonsterRoom room, shared_ptr<View> view) = 0;
-    virtual void visitTrapRoom(TrapRoom room, shared_ptr<View> view) = 0;
-    virtual void visitPotionRoom(PotionRoom room, shared_ptr<View> view) = 0;
-    virtual void visitTreasureRoom(TreasureRoom room, shared_ptr<View> view) = 0;
-    virtual void visitHealthRoom(HealthRoom room, shared_ptr<View> view) = 0;
-    virtual void visitTraderRoom(TraderRoom room, shared_ptr<View> view) = 0;
-    virtual void visitEmptyRoom(EmptyRoom room, shared_ptr<View> view) = 0;
-    virtual void visitStartingRoom(StartingRoom room, shared_ptr<View> view) = 0;
-    virtual void visitBossRoom(BossChamber room, shared_ptr<View> view) = 0;
+    virtual ~IVisitor() = default;
+    virtual void visitMonsterRoom(shared_ptr<View> view) = 0;
+    virtual void visitTrapRoom(shared_ptr<View> view) = 0;
+    virtual void visitPotionRoom(shared_ptr<View> view) = 0;
+    virtual void visitTreasureRoom(shared_ptr<View> view) = 0;
+    virtual void visitHealthRoom(shared_ptr<View> view) = 0;
+    virtual void visitTraderRoom(shared_ptr<View> view) = 0;
+    virtual void visitEmptyRoom(shared_ptr<View> view) = 0;
+    virtual void visitStartingRoom(shared_ptr<View> view) = 0;
+    virtual void visitBossRoom(shared_ptr<View> view) = 0;
 };
 
 // Part of Controller
 class ActionVisitor : public IVisitor {
 public:
-    ActionVisitor(shared_ptr<Hero> h);
-    void visitMonsterRoom(MonsterRoom room, shared_ptr<View> view) override;
-    void visitTrapRoom(TrapRoom room, shared_ptr<View> view) override;
-    void visitPotionRoom(PotionRoom room, shared_ptr<View> view) override;
-    void visitTreasureRoom(TreasureRoom room, shared_ptr<View> view) override;
-    void visitHealthRoom(HealthRoom room, shared_ptr<View> view) override;
-    void visitTraderRoom(TraderRoom room, shared_ptr<View> view) override;
-    void visitEmptyRoom(EmptyRoom room, shared_ptr<View> view) override;
-    void visitStartingRoom(StartingRoom room, shared_ptr<View> view) override;
-    void visitBossRoom(BossChamber room, shared_ptr<View> view) override;
+    explicit ActionVisitor(const shared_ptr<Hero>& h);
+    void visitMonsterRoom(shared_ptr<View> view) override;
+    void visitTrapRoom(shared_ptr<View> view) override;
+    void visitPotionRoom(shared_ptr<View> view) override;
+    void visitTreasureRoom(shared_ptr<View> view) override;
+    void visitHealthRoom(shared_ptr<View> view) override;
+    void visitTraderRoom(shared_ptr<View> view) override;
+    void visitEmptyRoom(shared_ptr<View> view) override;
+    void visitStartingRoom(shared_ptr<View> view) override;
+    void visitBossRoom(shared_ptr<View> view) override;
 
 private:
-    void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h, shared_ptr<View> view);
+    void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h, const shared_ptr<View>& view);
     shared_ptr<Observer> obs;
 };
 

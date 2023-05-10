@@ -1,12 +1,33 @@
 #include "Strategy.h"
-#include <iostream>
+#include <utility>
+
+
+Strategy::Strategy(shared_ptr<Hero>& hero) : h(hero) {}
+
+void Strategy::takeMoney()
+{
+    h->setMoney(h->getMoney() - this->getCurrentPrice());
+}
+
+bool Strategy::buyingProcess(int price, shared_ptr<View> view)
+{
+    if(this->makeNewPrice(price, std::move(view)))
+    {
+        this->takeMoney();
+        return true;
+    }
+    return false;
+}
+
+
+StandardStrategy::StandardStrategy(shared_ptr<Hero> h) : Strategy(h){}
 
 bool StandardStrategy::makeNewPrice(int p_heroPrice, shared_ptr<View> view)
 {
 	bool l_flag{ false };
 	if(p_heroPrice>h->getMoney())
 	{
-		view->NotEnoughtGoldToBuyItem();
+        view->NotEnoughGoldToBuyItem();
 	}
 	else if(p_heroPrice<this->getStartPrice()/2)
 	{
@@ -30,21 +51,3 @@ bool StandardStrategy::makeNewPrice(int p_heroPrice, shared_ptr<View> view)
 	}
 	return l_flag;
 }
-Strategy::Strategy(shared_ptr<Hero>& hero) :h(hero) {}
-StandardStrategy::StandardStrategy(shared_ptr<Hero> h) : Strategy(h){}
-void Strategy::takeMoney()
-{
-	h->setMoney(h->getMoney() - this->getCurrentPrice());
-}
-bool Strategy::buyingProcess(int price, shared_ptr<View> view)
-{
-	if(this->makeNewPrice(price, view))
-	{
-		this->takeMoney();
-		return true;
-	}
-	return false;
-}
-
-
-

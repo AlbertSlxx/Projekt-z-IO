@@ -9,6 +9,7 @@
 #include "Views.h"
 using namespace std;
 
+
 enum Profession
 {
     warrior = 1,
@@ -26,15 +27,16 @@ enum ItemType
     shield = 4
 };
 
+
 class Item {
 protected:
     int item_ID;
-    int value;
+    int value{};
     string name;
     ItemType type;
 
 public:
-    Item(int level) {
+    explicit Item(int level) {
         item_ID = static_cast<int>(round(makeRand(0, 999)));
     }
     int getValue() const { return value; }
@@ -50,6 +52,8 @@ public:
     virtual int getMinDamage() const { return 0; }
     virtual int getMaxDamage() const { return 0; }
 };
+
+
 class Weapon : public Item {
 protected:
     int min_damage;
@@ -57,28 +61,30 @@ protected:
     double critical_chance;
 
 public:
-    Weapon(int level);
-    int getMinDamage() const { return min_damage; }
-    int getMaxDamage() const { return max_damage; }
-    double getCriticalChance() const { return critical_chance; }
+    explicit Weapon(int level);
+    int getMinDamage() const override { return min_damage; }
+    int getMaxDamage() const override { return max_damage; }
+    double getCriticalChance() const override { return critical_chance; }
 };
+
 class Sword : public Weapon {
 protected:
     int main_stat;
 
 public:
-    Sword(int level);
-    int getMainStat() const { return main_stat; }
-    string getMainStatName() const { return "strength"; }
+    explicit Sword(int level);
+    int getMainStat() const override { return main_stat; }
+    string getMainStatName() const override { return "strength"; }
 };
+
 class MagicStick : public Weapon {
 protected:
     int main_stat;
 
 public:
-    MagicStick(int level);
-    int getMainStat() const { return main_stat; }
-    string getMainStatName() const { return "intelligence"; }
+    explicit MagicStick(int level);
+    int getMainStat() const override { return main_stat; }
+    string getMainStatName() const override { return "intelligence"; }
 };
 
 class Bow : public Weapon {
@@ -86,10 +92,11 @@ protected:
     int main_stat;
 
 public:
-    Bow(int level);
-    int getMainStat() const { return main_stat; }
-    string getMainStatName() const { return "agility"; }
+    explicit Bow(int level);
+    int getMainStat() const override { return main_stat; }
+    string getMainStatName() const override { return "agility"; }
 };
+
 
 class Armor : public Item {
 protected:
@@ -97,18 +104,19 @@ protected:
     int health;
 
 public:
-    Armor(int level);
-    int getDefense() const { return defense; }
-    int getHealth() const { return health; }
+    explicit Armor(int level);
+    int getDefense() const override { return defense; }
+    int getHealth() const override { return health; }
 };
+
 
 class Headgear : public Item {
 protected:
     int defense;
 
 public:
-    Headgear(int level);
-    int getDefense() const { return defense; }
+    explicit Headgear(int level);
+    int getDefense() const override { return defense; }
 };
 
 class Helmet : public Headgear {
@@ -116,9 +124,9 @@ protected:
     int health;
 
 public:
-    Helmet(int level);
-    int getHealth() const { return health; }
-    string getMainStatName() const { return "strength"; }
+    explicit Helmet(int level);
+    int getHealth() const override { return health; }
+    string getMainStatName() const override { return "strength"; }
 };
 
 class MagicHat : public Headgear {
@@ -126,18 +134,19 @@ protected:
     int intelligence;
 
 public:
-    MagicHat(int level);
-    int getMainStat() const { return intelligence; }
-    string getMainStatName() const { return "intelligence"; }
+    explicit MagicHat(int level);
+    int getMainStat() const override { return intelligence; }
+    string getMainStatName() const override { return "intelligence"; }
 };
+
 
 class Talisman : public Item {
 protected:
     double critical_chance;
 
 public:
-    Talisman(int level);
-    double getCriticalChance() const { return critical_chance; }
+    explicit Talisman(int level);
+    double getCriticalChance() const override { return critical_chance; }
 };
 
 class ScoutTalisman : public Talisman {
@@ -145,9 +154,9 @@ protected:
     int agility;
 
 public:
-    ScoutTalisman(int level);
-    int getMainStat() const { return agility; }
-    string getMainStatName() const { return "agility"; }
+    explicit ScoutTalisman(int level);
+    int getMainStat() const override { return agility; }
+    string getMainStatName() const override { return "agility"; }
 };
 
 class WarriorTalisman : public Talisman {
@@ -155,9 +164,9 @@ protected:
     int strength;
 
 public:
-    WarriorTalisman(int level);
-    int getMainStat() const { return strength; }
-    string getMainStatName() const { return "strength"; }
+    explicit WarriorTalisman(int level);
+    int getMainStat() const override { return strength; }
+    string getMainStatName() const override { return "strength"; }
 };
 
 class MageTalisman : public Talisman {
@@ -165,10 +174,11 @@ protected:
     int intelligence;
 
 public:
-    MageTalisman(int level);
-    int getMainStat() const { return intelligence; }
-    string getMainStatName() const { return "intelligence"; }
+    explicit MageTalisman(int level);
+    int getMainStat() const override { return intelligence; }
+    string getMainStatName() const override { return "intelligence"; }
 };
+
 
 class Shield : public Item {
 protected:
@@ -176,20 +186,19 @@ protected:
     double block_chance;
 
 public:
-    Shield(int level);
+    explicit Shield(int level);
     int getDefense() const override { return defense; }
-    double getBlockChance() const { return block_chance; }
+    double getBlockChance() const override { return block_chance; }
 };
+
 
 class ItemFactory {
 public:
     static unique_ptr<Item> createItem(int level, ItemType type, Profession profession);
 };
 
-static void showItemDetails(shared_ptr<Item>& item, Profession prof, shared_ptr<View> view)
+static void showItemDetails(shared_ptr<Item>& item, Profession prof, const shared_ptr<View>& view)
 {
-    //cout << "Item details: type=" << to_string(item->getType()) << ", prof=" << to_string(prof) << endl;
-
     string type, proff;
 
     if (item->getType() == weapon)
@@ -210,10 +219,7 @@ static void showItemDetails(shared_ptr<Item>& item, Profession prof, shared_ptr<
     else if (prof == mage)
         proff = "Mage";
 
-
     view->ShowOneItem(type, proff, item->getValue(), item->getName(), item->getMinDamage(), item->getMaxDamage(), item->getMainStat(), item->getMainStatName());
-    return;
 }
 
 #endif
-

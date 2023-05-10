@@ -5,169 +5,165 @@
 #include <vector>
 #include "Strategy.h"
 
+
 ItemType getRandomItemType( shared_ptr<Hero>&h);
+class DescriptionVisitor;
 
 // Part of Controller
 class Chest {
 public:
-    void openBox(shared_ptr<Hero>& hero, shared_ptr<View> view);
+    static void openBox(shared_ptr<Hero>& hero, const shared_ptr<View>& view);
 };
 
-class DescriptionVisitor;
-
-// Part of Controller
 class Event {
 public:
     Event();
     virtual void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) = 0;
-    virtual void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    virtual void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view);
 };
 
 class EndPoint : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToMonsterRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class Fight : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class RunAway : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class CheckChest : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToTrapRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class ActiveTheTrap : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToPotionRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class DrinkPotion : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToTreasureRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToHealthRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class HealthYourself : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToTraderRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class SeeItems : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 
 protected:
-    void BuyItems(shared_ptr<Hero> &h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3, shared_ptr<View> view);
-    bool buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item>& item, shared_ptr<View> view);
+    static void BuyItems(shared_ptr<Hero> &h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3, const shared_ptr<View>& view);
+    static bool buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item>& item, const shared_ptr<View>& view);
 };
-
 
 class EnterToEmptyRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToStartingRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class EnterToBossRoom : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 class BossFight : public Event {
 public:
-    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view);
-    void Action(shared_ptr<Hero> &h, shared_ptr<View> view);
+    void DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) override;
+    void Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) override;
 };
 
 
 class EventNode {
 public:
-    EventNode(shared_ptr<Event>&& curr);
+    explicit EventNode(shared_ptr<Event>&& curr);
     shared_ptr<Event> current;
-    vector <shared_ptr<EventNode>> AllNexts;
+    vector <shared_ptr<EventNode>> allNexts;
 };
+
 
 // Part of Controller
 class DescriptionVisitor {
 public:
-    void visitEndPoint(EndPoint event, shared_ptr<View> view);
-    void visitEnterToMonsterRoom(EnterToMonsterRoom event, shared_ptr<View> view);
-    void visitFight(Fight event, shared_ptr<View> view);
-    void visitRunAway(RunAway event, shared_ptr<View> view);
-    void visitCheckChest(CheckChest event, shared_ptr<View> view);
-    void visitEnterToTrapRoom(EnterToTrapRoom event, shared_ptr<View> view);
-    void visitActiveTheTrap(ActiveTheTrap event, shared_ptr<View> view);
-    void visitEnterToPotionRoom(EnterToPotionRoom event, shared_ptr<View> view);
-    void visitDrinkPotion(DrinkPotion event, shared_ptr<View> view);
-    void visitEnterToTreasureRoom(EnterToTreasureRoom event, shared_ptr<View> view);
-    void visitEnterToHealthRoom(EnterToHealthRoom event, shared_ptr<View> view);
-    void visitHealthYourself(HealthYourself event, shared_ptr<View> view);
-    void visitEnterToTraderRoom(EnterToTraderRoom event, shared_ptr<View> view);
-    void visitSeeItems(SeeItems event, shared_ptr<View> view);
-    void visitEnterToEmptyRoom(EnterToEmptyRoom event, shared_ptr<View> view);
-    void visitEnterToStartingRoom(EnterToStartingRoom event, shared_ptr<View> view);
-    void visitEnterToBossRoom(EnterToBossRoom event, shared_ptr<View> view);
-    void visitBossFight(BossFight event, shared_ptr<View> view);
-
-private:
-    void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
+    static void visitEndPoint(const shared_ptr<View> &view);
+    static void visitEnterToMonsterRoom(const shared_ptr<View> &view);
+    static void visitFight(const shared_ptr<View> &view);
+    static void visitRunAway(const shared_ptr<View> &view);
+    static void visitCheckChest(const shared_ptr<View> &view);
+    static void visitEnterToTrapRoom(const shared_ptr<View> &view);
+    static void visitActiveTheTrap(const shared_ptr<View> &view);
+    static void visitEnterToPotionRoom(const shared_ptr<View> &view);
+    static void visitDrinkPotion(const shared_ptr<View> &view);
+    static void visitEnterToTreasureRoom(const shared_ptr<View> &view);
+    static void visitEnterToHealthRoom(const shared_ptr<View> &view);
+    static void visitHealthYourself(const shared_ptr<View> &view);
+    static void visitEnterToTraderRoom(const shared_ptr<View> &view);
+    static void visitSeeItems(const shared_ptr<View> &view);
+    static void visitEnterToEmptyRoom(const shared_ptr<View> &view);
+    static void visitEnterToStartingRoom(const shared_ptr<View> &view);
+    static void visitEnterToBossRoom(const shared_ptr<View>& view);
+    static void visitBossFight(const shared_ptr<View>& view);
 };
 
 #endif

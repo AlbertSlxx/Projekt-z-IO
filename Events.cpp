@@ -1,6 +1,6 @@
 #include "Events.h"
-#include <chrono>
 #include <thread>
+
 
 ItemType getRandomItemType(shared_ptr<Hero>&h) {
     int type = static_cast<int>(round(makeRand(0, 3)));
@@ -10,26 +10,33 @@ ItemType getRandomItemType(shared_ptr<Hero>&h) {
     }
 
     ItemType itemType;
-    if (type == 0)
-        itemType = weapon;
-    else if (type == 1)
-        itemType = armor;
-    else if (type == 2)
-        itemType = headgear;
-    else if (type == 3)
-        itemType = talisman;
-    else
-        itemType = shield;
+    switch (type) {
+        case 0:
+            itemType = weapon;
+            break;
+        case 1:
+            itemType = armor;
+            break;
+        case 2:
+            itemType = headgear;
+            break;
+        case 3:
+            itemType = talisman;
+            break;
+        default:
+            itemType = shield;
+            break;
+    }
 
     return itemType;
 }
 
 
-void Chest::openBox(shared_ptr<Hero>& h, shared_ptr<View> view) {
+void Chest::openBox(shared_ptr<Hero>& h, const shared_ptr<View>& view) {
     const ItemType itemType = getRandomItemType(h);
-    shared_ptr<Item> item = ItemFactory::createItem(h->getlevel(), itemType, h->getProf());
+    shared_ptr<Item> item = ItemFactory::createItem(h->getLevel(), itemType, h->getProf());
 
-    int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
+    int coins = static_cast<int>(round(makeRand(0, h->getLevel() * 100)));
 
     view->GoldFoundInChest(coins);
     h->setMoney(h->getMoney() + coins);
@@ -40,7 +47,7 @@ void Chest::openBox(shared_ptr<Hero>& h, shared_ptr<View> view) {
     view->ShowItemToChange();
     h->showOneItem(item->getType(), h->getProf(), view);
 
-    view->DecisiontToReplaceItem();
+    view->DecisionToReplaceItem();
 
     char decision;
     while (true) {
@@ -57,71 +64,69 @@ void Chest::openBox(shared_ptr<Hero>& h, shared_ptr<View> view) {
 }
 
 
-void DescriptionVisitor::visitEndPoint(EndPoint event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEndPoint(const shared_ptr<View> &view) {
     view->DescriptionEndPoint();
 }
-void DescriptionVisitor::visitEnterToMonsterRoom(EnterToMonsterRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToMonsterRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToMonsterRoom();
 }
-void DescriptionVisitor::visitFight(Fight event, shared_ptr<View> view) {
+void DescriptionVisitor::visitFight(const shared_ptr<View> &view) {
     view->DescriptionFight();
 }
-void DescriptionVisitor::visitRunAway(RunAway event, shared_ptr<View> view) {
+void DescriptionVisitor::visitRunAway(const shared_ptr<View> &view) {
     view->DescriptionRunAway();
 }
-void DescriptionVisitor::visitCheckChest(CheckChest event, shared_ptr<View> view) {
+void DescriptionVisitor::visitCheckChest(const shared_ptr<View> &view) {
     view->DescriptionCheckChest();
 }
-void DescriptionVisitor::visitEnterToTrapRoom(EnterToTrapRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToTrapRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToTrapRoom();
 }
-void DescriptionVisitor::visitActiveTheTrap(ActiveTheTrap event, shared_ptr<View> view) {
+void DescriptionVisitor::visitActiveTheTrap(const shared_ptr<View> &view) {
     view->DescriptionActiveTheTrap();
 }
-void DescriptionVisitor::visitEnterToPotionRoom(EnterToPotionRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToPotionRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToPotionRoom();
 }
-void DescriptionVisitor::visitDrinkPotion(DrinkPotion event, shared_ptr<View> view) {
+void DescriptionVisitor::visitDrinkPotion(const shared_ptr<View> &view) {
     view->DescriptionDrinkPotion();
 }
-void DescriptionVisitor::visitEnterToTreasureRoom(EnterToTreasureRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToTreasureRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToTreasureRoom();
 }
-void DescriptionVisitor::visitEnterToHealthRoom(EnterToHealthRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToHealthRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToHealthRoom();
 }
-void DescriptionVisitor::visitHealthYourself(HealthYourself event, shared_ptr<View> view) {
+void DescriptionVisitor::visitHealthYourself(const shared_ptr<View> &view) {
     view->DescriptionHealthYourself();
 }
-void DescriptionVisitor::visitEnterToTraderRoom(EnterToTraderRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToTraderRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToTraderRoom();
 }
-void DescriptionVisitor::visitSeeItems(SeeItems event, shared_ptr<View> view) {
+void DescriptionVisitor::visitSeeItems(const shared_ptr<View> &view) {
     view->DescriptionSeeItems();
 }
-void DescriptionVisitor::visitEnterToEmptyRoom(EnterToEmptyRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToEmptyRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToEmptyRoom();
 }
-void DescriptionVisitor::visitEnterToStartingRoom(EnterToStartingRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToStartingRoom(const shared_ptr<View> &view) {
     view->DescriptionEnterToStartingRoom();
 }
-void DescriptionVisitor::visitEnterToBossRoom(EnterToBossRoom event, shared_ptr<View> view) {
+void DescriptionVisitor::visitEnterToBossRoom(const shared_ptr<View>& view) {
     view->DescriptionEnterToBossRoom();
 }
-void DescriptionVisitor::visitBossFight(BossFight event, shared_ptr<View> view) {
+void DescriptionVisitor::visitBossFight(const shared_ptr<View>& view) {
     view->DescriptionBossFight();
 }
 
 
-void Event::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {}
-
-Event::Event() {}
-
+Event::Event() = default;
+void Event::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {}
 
 void EndPoint::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEndPoint(*this, view);
+    visitor.visitEndPoint(view);
 }
-void EndPoint::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EndPoint::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     char decision;
     while (true) {
         view->CheckStatisticsOrEquipment();
@@ -141,54 +146,50 @@ void EndPoint::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     }
 }
 
-
 void EnterToMonsterRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToMonsterRoom(*this, view);
+    visitor.visitEnterToMonsterRoom(view);
 }
-void EnterToMonsterRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToMonsterRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToMonsterRoom();
-    view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+    view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
 }
-
 
 void Fight::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitFight(*this, view);
+    visitor.visitFight(view);
 }
-void Fight::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
-    shared_ptr<monster> normal_monster = make_shared<monster>(h->getlevel(), 0);
+void Fight::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
+    shared_ptr<monster> normal_monster = make_shared<monster>(h->getLevel(), 0);
     shared_ptr<Character> ch(normal_monster);
-	h->fight(ch, 0, view);
-    if (h->getcurrentHealth() > 0)
+	h->fight(ch, false, view);
+    if (h->getCurrentHealth() > 0)
     {
         view->MonsterDefeated();
-        view->RemainingHealth(h->getcurrentHealth());
-        h->levelup();
-        view->LevelUp(h->getlevel());
-        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+        view->RemainingHealth(h->getCurrentHealth());
+        h->levelUp();
+        view->LevelUp(h->getLevel());
+        view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
     }
 }
 
-
 void RunAway::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitRunAway(*this, view);
+    visitor.visitRunAway(view);
 }
-void RunAway::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void RunAway::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     int chance = static_cast<int>(round(makeRand(0, 10)));
 
     if (chance < 3) {
         view->EscapeWithBeingHit();
-        h->getDamage(static_cast<int>(h->getcurrentHealth() * 0.2));
-        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+        h->getDamage(static_cast<int>(h->getCurrentHealth() * 0.2));
+        view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
     }
     else
         view->EscapeWithoutBeingHit();
 }
 
-
 void CheckChest::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitCheckChest(*this, view);
+    visitor.visitCheckChest(view);
 }
-void CheckChest::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void CheckChest::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     shared_ptr<Chest> chest = make_unique<Chest>();
 
     char decision;
@@ -207,94 +208,85 @@ void CheckChest::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     }
 }
 
-
 void EnterToTrapRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToTrapRoom(*this, view);
+    visitor.visitEnterToTrapRoom(view);
 }
-void EnterToTrapRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToTrapRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->DescriptionEnterToTrapRoom();
 }
 
-
 void ActiveTheTrap::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitActiveTheTrap(*this, view);
+    visitor.visitActiveTheTrap(view);
 }
-void ActiveTheTrap::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void ActiveTheTrap::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->HurtedByTrap();
-    h->getDamage(static_cast<int>(h->getmaxHealth() * 0.2));
-    view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+    h->getDamage(static_cast<int>(h->getMaxHealth() * 0.2));
+    view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
 }
-
 
 void EnterToPotionRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToPotionRoom(*this, view);
+    visitor.visitEnterToPotionRoom(view);
 }
-void EnterToPotionRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToPotionRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToPotionRoom();
 }
 
-
 void DrinkPotion::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitDrinkPotion(*this, view);
+    visitor.visitDrinkPotion(view);
 }
-void DrinkPotion::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void DrinkPotion::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     int drawn_num = static_cast<int>(round(makeRand(0, 1)));
 
     if (drawn_num == 0) {
-        h->setcurrentHealth(h->getmaxHealth());
+        h->setCurrentHealth(h->getMaxHealth());
         view->HealthRestoredByPotion();
-        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+        view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
     }
     else {
-        int poison = h->getmaxHealth() * 0.3;
+        int poison = (int)(h->getMaxHealth() * 0.3);
         h->getDamage(poison);
         view->HealthLostByPoisonedPotion(poison);
-        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+        view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
     }
 }
 
-
 void EnterToTreasureRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToTreasureRoom(*this, view);
+    visitor.visitEnterToTreasureRoom(view);
 }
-void EnterToTreasureRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToTreasureRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToTreasureRoom();
 }
 
-
 void EnterToHealthRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToHealthRoom(*this, view);
+    visitor.visitEnterToHealthRoom(view);
 }
-void EnterToHealthRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToHealthRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToHealthRoom();
 }
 
-
 void HealthYourself::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitHealthYourself(*this, view);
+    visitor.visitHealthYourself(view);
 }
-void HealthYourself::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void HealthYourself::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->HealthRestoredByMagicFountain();
-    h->setcurrentHealth(h->getmaxHealth());
-    view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
+    h->setCurrentHealth(h->getMaxHealth());
+    view->ShowCurrentHealth(h->getCurrentHealth(), h->getMaxHealth());
 }
-
 
 void EnterToTraderRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToTraderRoom(*this, view);
+    visitor.visitEnterToTraderRoom(view);
 }
-void EnterToTraderRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToTraderRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToTraderRoom();
 }
 
-
 void SeeItems::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitSeeItems(*this, view);
+    visitor.visitSeeItems(view);
 }
-void SeeItems::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
-    shared_ptr<Item> item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
-    shared_ptr<Item> item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
-    shared_ptr<Item> item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
+void SeeItems::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
+    shared_ptr<Item> item1 = ItemFactory::createItem(h->getLevel(), getRandomItemType(h), h->getProf());
+    shared_ptr<Item> item2 = ItemFactory::createItem(h->getLevel(), getRandomItemType(h), h->getProf());
+    shared_ptr<Item> item3 = ItemFactory::createItem(h->getLevel(), getRandomItemType(h), h->getProf());
 
     h->showEQ(view);
 
@@ -317,7 +309,7 @@ void SeeItems::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     if (wantToBuy == 'Y')
         BuyItems(h, item1, item2, item3, view);
 }
-void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<Item> &i2, shared_ptr<Item> &i3, shared_ptr<View> view) {
+void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<Item> &i2, shared_ptr<Item> &i3, const shared_ptr<View>& view) {
     bool wantToBuy = true;
     string l_playerDecision{};
     char player_decision;
@@ -335,7 +327,6 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
         }
         catch(exception &e)
         {
-	        
         }
         if (num == 1) {
             if (!bought1) {
@@ -390,7 +381,7 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
         }
     }
 }
-bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item, shared_ptr<View> view) {
+bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item, const shared_ptr<View>& view) {
     shared_ptr<Item> _buyingItem = item;
     bool _flag = false;
 
@@ -427,39 +418,35 @@ bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item, shared_pt
 	
 }
 
-
 void EnterToEmptyRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToEmptyRoom(*this, view);
+    visitor.visitEnterToEmptyRoom(view);
 }
-void EnterToEmptyRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToEmptyRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToEmptyRoom();
 }
 
-
 void EnterToStartingRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToStartingRoom(*this, view);
+    visitor.visitEnterToStartingRoom(view);
 }
-void EnterToStartingRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToStartingRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToStartingRoom();
 }
 
-
 void EnterToBossRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitEnterToBossRoom(*this, view);
+    visitor.visitEnterToBossRoom(view);
 }
-void EnterToBossRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+void EnterToBossRoom::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     view->EnteredToBossRoom();
 }
 
-
 void BossFight::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
-    visitor.visitBossFight(*this, view);
+    visitor.visitBossFight(view);
 }
-void BossFight::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
-    shared_ptr<monster> boss_monster = make_shared<monster>(h->getlevel(), 1);
+void BossFight::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
+    shared_ptr<monster> boss_monster = make_shared<monster>(h->getLevel(), 1);
     shared_ptr<Character> ch(boss_monster);
-    h->fight(ch, 1, view);
-    if (h->getcurrentHealth() > 0)
+    h->fight(ch, true, view);
+    if (h->getCurrentHealth() > 0)
         view->BossDefeated();
 }
 

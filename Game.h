@@ -3,6 +3,7 @@
 #pragma once
 #include "Chambers.h"
 
+
 // Controller
 class Game
 {
@@ -11,12 +12,14 @@ public:
 	~Game();
 	void play();
     shared_ptr<View> view;
-	shared_ptr<ChamberNode> prepareMap();
-	void chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<View> view);
+	static shared_ptr<ChamberNode> prepareMap();
+	void chamberTransitionFunction(shared_ptr<ChamberNode>& start);
+
 private:
 	shared_ptr<Hero> hero;
 	shared_ptr<Observer> o;
-    void heroSetClass(shared_ptr<View> view);
-    void heroSetName(shared_ptr<View> view);
+    void heroSetClass();
+    void heroSetName();
 };
+
 #endif

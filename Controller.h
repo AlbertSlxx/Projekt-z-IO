@@ -3,7 +3,7 @@
 
 class Controller {
 public:
-    void playGame();
+    static void playGame();
 
 private:
     Controller() = default;

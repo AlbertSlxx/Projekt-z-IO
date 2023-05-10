@@ -3,11 +3,13 @@
 #define CHARACTER_H
 
 #include <cmath>
-#include <stdlib.h>
+#include <cstdlib>
 #include <memory>
 #include "Equipment.h"
 #include <list>
+#include <utility>
 class Observer;
+
 
 class CharacterClass
 {
@@ -15,26 +17,26 @@ public:
 	CharacterClass();
 	virtual ~CharacterClass() = 0;
 	Profession getProf();
-	int getmainStat();
-	int getattackModifier();
-	int getvitalityModifier();
-	int getdefenseModifier();
-	string getmainStatName();
+	int getMainStat() const;
+	int getAttackModifier() const;
+	int getVitalityModifier() const;
+	int getDefenseModifier() const;
+	string getMainStatName();
 	string getProfName();
-	string getspecialAbility();
+	string getSpecialAbility();
 
 protected:
 	Profession Prof;
-	int mainStat;
-	int attackModifier;
-	int vitalityModifier;
-	int defenseModifier;
-	void setspecialAbility(string);
-	void setmainStatName(string);
-	void setdefenseModifier(int);
-	void setmainStat(int);
-	void setvitalityModifier(int);
-	void setattackModifier(int);
+	int mainStat{};
+	int attackModifier{};
+	int vitalityModifier{};
+	int defenseModifier{};
+	void setSpecialAbility(string sa);
+	void setMainStatName(string sm);
+	void setDefenseModifier(int);
+	void setMainStat(int);
+	void setVitalityModifier(int);
+	void setAttackModifier(int);
 	void setProf(Profession);
 	string mainStatName;
 	string SpecialAbility;
@@ -44,22 +46,22 @@ class Scout : public CharacterClass
 {
 public:
 	Scout();
-	~Scout();
+	~Scout() override;
 };
 
 class Mage : public CharacterClass
 {
 public:
 	Mage();
-	~Mage();
+	~Mage() override;
 };
+
 class Warrior : public CharacterClass
 {
 public:
 	Warrior();
-	~Warrior();
+	~Warrior() override;
 };
-
 
 
 class Character
@@ -67,110 +69,111 @@ class Character
 public:
 	Character();
 	virtual ~Character()=0;
-	int getminimalAttack();
-	virtual void setminimalAttack() {}
-	int getmaximalAttack();
-	virtual void setmaximalAttack() {}
-	int getlevel();
-	virtual void setlevel(int) {}
-	int getcurrentHealth();
-	virtual void setcurrentHealth(int);
-	double getcriticalChance();
-	void setcriticalChance(double);
-	int getmaxHealth();
-	virtual void setBlockChance() {};
-	double getBlockChance();
-	virtual void setmaxHealth() {}
-	virtual void setdefense() {}
-	int getdefense();
+	int getMinimalAttack() const;
+	virtual void setMinimalAttack() {}
+	int getMaximalAttack() const;
+	virtual void setMaximalAttack() {}
+	int getLevel() const;
+	virtual void setLevel(int) {}
+	int getCurrentHealth() const;
+	virtual void setCurrentHealth(int);
+	double getCriticalChance() const;
+	void setCriticalChance(double);
+	int getMaxHealth() const;
+	virtual void setBlockChance() {}
+	double getBlockChance() const;
+	virtual void setMaxHealth() {}
+	virtual void setDefense() {}
+	int getDefense() const;
 	int getDamage(int);
 	virtual void chooseClass() {}
 	string getName();
-	virtual void setName() {}
-	bool useSpecialEffect(shared_ptr<Character>& opponent, shared_ptr<View> view);
-	int useSpecialAttack();
+	bool useSpecialEffect(shared_ptr<Character>& opponent, const shared_ptr<View>& view);
+	int useSpecialAttack() const;
 	Profession getProf();
-	void attackOpponent(shared_ptr<Character>& opponent, shared_ptr<View> view);
+	void attackOpponent(shared_ptr<Character>& opponent, const shared_ptr<View>& view);
+
 protected:
-	
-	int minimalAttack;
-	int maximalAttack;
-	int level;
-	int currentHealth;
-	int maxHealth;
-	int defense;
-	double blockChance;
+	int minimalAttack{};
+	int maximalAttack{};
+	int level{};
+	int currentHealth{};
+	int maxHealth{};
+	int defense{};
+	double blockChance{};
 	string name;
-	double criticalChance;
+	double criticalChance{};
 	unique_ptr<CharacterClass> Class;
 };
 
 class Hero : public Character
 {
 public:
-	~Hero();
+	~Hero() override;
 	static shared_ptr<Hero>& getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
-	void showStatistics(shared_ptr<View> view);
-	void showEQ(shared_ptr<View> view);
-	void showOneItem(ItemType, Profession, shared_ptr<View> view);
+	void showStatistics(const shared_ptr<View>& view);
+	void showEQ(const shared_ptr<View>& view);
+	void showOneItem(ItemType, Profession, const shared_ptr<View>& view);
 	void setAllStats();
 	void chooseClass(int c);
-	void setmaxHealth(int);
-	void setdefense(int);
-	void setcurrentHealth(int);
-	void setlevel(int);
-	void setminimalAttack(int);
-	void setmaximalAttack(int);
+	void setMaxHealth(int);
+	void setDefense(int);
+	void setCurrentHealth(int) override;
+	void setLevel(int) override;
+	void setMinimalAttack(int);
+	void setMaximalAttack(int);
 	void setAttack(int, int,int);
 	void setName(string n);
-	void levelup();
-	void setBlockChance();
+	void levelUp();
+	void setBlockChance() override;
 	void setMoney(int);
-	int getMoney();
-	void ChangeEQ(shared_ptr<Item>&, shared_ptr<View> view);
-	bool fight(shared_ptr<Character>&,bool, shared_ptr<View> view);
-	void AddObserver(shared_ptr<Observer>);
-	void DeleteObserver(shared_ptr<Observer>);
+	int getMoney() const;
+	void ChangeEQ(shared_ptr<Item>&, const shared_ptr<View>& view);
+	bool fight(shared_ptr<Character>&,bool, const shared_ptr<View>& view);
+	void AddObserver(const shared_ptr<Observer>&);
+	void DeleteObserver(const shared_ptr<Observer>&);
 	
 private:
 	Hero();
+    int money{};
 	void Notify();
 	list<shared_ptr<Observer>> obs;
 	static shared_ptr<Hero> hero;
-	int money;
 	unique_ptr<Equipment> EQ;
-};
-class Observer : public enable_shared_from_this<Observer>
-{
-
-public:
-	void setTrue();
-	bool check(shared_ptr<View> view);
-	Observer(shared_ptr<Hero> hero): h(hero){}
-	void removeFromObserver();
-	void addToObserver();
-private:
-	bool endik{ false };
-	bool getEndik();
-	shared_ptr<Hero> h;
 };
 
 class monster : public Character
 {
 public:
 	monster(int,bool);
-	~monster();
-	void chooseClass();
-	void setmaxHealth();
-	void setdefense();
-	void setlevel(int);
-	void setminimalAttack();
-	void setmaximalAttack();
-	void setName(bool);
-	void setBlockChance();
+	~monster() override;
+	void chooseClass() override;
+	void setMaxHealth() override;
+	void setDefense() override;
+	void setLevel(int) override;
+	void setMinimalAttack() override;
+	void setMaximalAttack() override;
+	void setBlockChance() override;
+    void setName(bool);
 	void setALL(int);
-private:
 };
+
+
+class Observer : public enable_shared_from_this<Observer>
+{
+public:
+    explicit Observer(shared_ptr<Hero> hero): h(std::move(hero)){}
+    void setTrue();
+    bool check(const shared_ptr<View>& view);
+    void removeFromObserver();
+    void addToObserver();
+
+private:
+    bool endik{ false };
+    bool getEndik() const;
+    shared_ptr<Hero> h;
+};
+
 #endif
