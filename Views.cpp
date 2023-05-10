@@ -195,14 +195,14 @@ void TXTView::EnteredToTraderRoom() {
 
 void TXTView::ShowMerchantItemWithPrice(int num, int price) {
     if (num == 1)
-        cout << "Merchant items:" << endl;
+        cout << "\nMerchant items:\n";
 
+    cout << "\n[item " << num << "]" << endl;
     cout << "price: " << price << endl;
-    cout << "item " << num << ":" << endl << endl;
 }
 
 void TXTView::ShowGoldBalance(int bal) {
-    cout << "Your balance: " << bal << endl;
+    cout << "\nYour balance: " << bal << endl;
 }
 
 void TXTView::DecisionToBuySomething() {
@@ -303,11 +303,11 @@ void TXTView::BlockedHit(string ch1, string ch2) {
     cout << ch1 << " blocked the hit from " << ch2 << endl;
 }
 
-void TXTView::ShowPossibleClassesToChoose(string name) {
-    cout << "Choose class of " << name << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
+void TXTView::ShowPossibleClassesToChoose() {
+    cout << "Choose class of your hero:" << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
 }
 
-void TXTView::IncorrectNumber(int min,int max) {
+void TXTView::IncorrectNumber(int min, int max) {
     cout << "Bad Number. Choose number between " << min << " and " << max << endl;
 }
 
@@ -325,20 +325,18 @@ void TXTView::WriteHeroName() {
     cout << "Write name of your hero:" << endl;
 }
 
-void TXTView::ShowEquipment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
-                            string talismanName, string talismanMainStatName, int talismanMainStat, double talismanCrit, int talismanValue,
-                            string armorName, int armorDef, int armorHealth, int armorValue, string headGearName, int headGearDef, int headGearVal,
-                            int headgearValue, string headGearMainStat, string shieldName, int shieldDef, double shieldBlockChance, int shieldValue)
+void TXTView::ShowEquipment(shared_ptr<Item> weapon, shared_ptr<Item> armor, shared_ptr<Item> headgear, shared_ptr<Item> talisman, shared_ptr<Item> shield)
 {
     cout << endl << "Equipment of your hero:" << endl;
-    this->ShowOneItem("weapon", prof, weaponValue, weaponName, minDamage, maxDamage, weaponMainStat, mainStateName);
-    this->ShowOneItem("talisman", prof, talismanValue, talismanName, talismanMainStat, talismanCrit,0,talismanMainStatName);
-    if(prof == "Warrior")
-    {
-        this->ShowOneItem("shield", prof, shieldValue, shieldName, shieldDef, shieldBlockChance);
-    }
-    this->ShowOneItem("armor", prof, armorValue, armorName, armorDef, armorHealth);
-    this->ShowOneItem("headgear", prof, headgearValue, headGearName, headGearDef, headGearVal, 0, headGearMainStat);
+
+    ShowOneItem(weapon);
+    ShowOneItem(armor);
+    ShowOneItem(headgear);
+    ShowOneItem(talisman);
+
+    Profession proff = weapon->getProffesion();
+    if (proff == warrior)
+        ShowOneItem(shield);
 }
 
 void TXTView::ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack, int maxAttack, double crit, int def, int money, double block) {
@@ -362,47 +360,48 @@ void TXTView::ShowStatistics(string name, string prof, string mainStatName, stri
     cout << "Amount of money: " << money << endl;
 }
 
-void TXTView::ShowOneItem(string type, string prof, int value, string name,
-                          double val1, double val2, double val3, string mainStatName)
+void TXTView::ShowOneItem(shared_ptr<Item> item)
 {
-    if (type == "weapon")
+    ItemType type = item->getType();
+
+    if (type == weapon)
     {
-        cout << "Weapon:\n\t name: " << name << "\n\t minimal Damage: " << val1
-    	<< "\n\t maximal Damage: " << val2
-    	<< "\n\t " << mainStatName << ": " << val3
-    	<< "\n\t value: " << value << endl;
+        cout << "Weapon:\n\t name: " << item->getName() << "\n\t minimal Damage: " << item->getMinDamage()
+    	<< "\n\t maximal Damage: " << item->getMaxDamage()
+    	<< "\n\t " << item->getMainStatName() << ": " << item->getMainStat()
+    	<< "\n\t value: " << item->getValue() << endl;
     }
-    else if (type == "talisman")
+    else if (type == talisman)
     {
-        cout << "Talisman:\n\t name: " << name << "\n\t " << mainStatName
-    	<< ": " << val1 << "\n\t Critical Chance: " << val2
-    	<< "\n\t value: " << value << endl;
+        cout << "Talisman:\n\t name: " << item->getName() << "\n\t " << item->getMainStatName()
+    	<< ": " << item->getMainStat() << "\n\t Critical Chance: " << item->getCriticalChance()
+    	<< "\n\t value: " << item->getValue() << endl;
     }
-    else if (type == "shield")
+    else if (type == shield)
     {
-        cout << "Shield:\n\t name: " << name << "\n\t Defense: "
-    	<< val1 << "\n\t Block Chance: " << val2
-    	<< "\n\t value: " << value << endl;
+        cout << "Shield:\n\t name: " << item->getName() << "\n\t Defense: "
+    	<< item->getDefense() << "\n\t Block Chance: " << item->getBlockChance()
+    	<< "\n\t value: " << item->getValue() << endl;
     }
-    else if (type == "armor")
+    else if (type == armor)
     {
-        cout << "Armor:\n\t name: " << name << "\n\t Defense: "
-    	<< val1 << "\n\t Health: " << val2
-    	<< "\n\t value: " << value << endl;
+        cout << "Armor:\n\t name: " << item->getName() << "\n\t Defense: "
+    	<< item->getDefense() << "\n\t Health: " << item->getHealth()
+    	<< "\n\t value: " << item->getValue() << endl;
     }
-    else if (type == "headgear")
+    else if (type == headgear)
     {
-        cout << "Headgear:\n\t name: " << name
-            << "\n\t Defense: " << val1;
-        if (prof == "Mage")
+        cout << "Headgear:\n\t name: " << item->getName()
+            << "\n\t Defense: " << item->getDefense();
+        if (item->getProffesion() == mage)
         {
-            cout << "\n\t " << mainStatName << ": " << val2;
+            cout << "\n\t " << item->getMainStatName() << ": " << item->getMainStat();
         }
         else
         {
-            cout << "\n\t Health: " << val2;
+            cout << "\n\t Health: " << item->getHealth();
         }
-        cout << "\n\t value: " << value << endl;
+        cout << "\n\t value: " << item->getValue() << endl;
     }
 }
 

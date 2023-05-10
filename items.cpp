@@ -25,6 +25,7 @@ Sword::Sword(int level) : Weapon(level) {
 
 	int r = static_cast<int>(round(makeRand(0, namesTableSize-1)));
 	name = namesForSwords[r];
+    profession = warrior;
 }
 
 MagicStick::MagicStick(int level) : Weapon(level) {
@@ -38,6 +39,7 @@ MagicStick::MagicStick(int level) : Weapon(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForMagicSticks[r];
+    profession = mage;
 }
 
 Bow::Bow(int level) : Weapon(level) {
@@ -51,10 +53,11 @@ Bow::Bow(int level) : Weapon(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForBows[r];
+    profession = scout;
 }
 
 
-Armor::Armor(int level) : Item(level) {
+Armor::Armor(int level, Profession proff) : Item(level) {
     type = armor;
     value = level * 120;
 
@@ -71,6 +74,7 @@ Armor::Armor(int level) : Item(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForArmors[r];
+    profession = proff;
 }
 
 
@@ -82,11 +86,12 @@ Headgear::Headgear(int level) : Item(level) {
     defense = static_cast<int>(round(makeRand(min, min+2)));
 }
 
-Helmet::Helmet(int level) : Headgear(level) {
+Helmet::Helmet(int level, Profession proff) : Headgear(level) {
     health = static_cast<int>(round(makeRand(level*10, level * 10+200)));
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForHelmets[r];
+    profession = proff;
 }
 
 MagicHat::MagicHat(int level) : Headgear(level) {
@@ -94,6 +99,7 @@ MagicHat::MagicHat(int level) : Headgear(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForMagicHats[r];
+    profession = mage;
 }
 
 
@@ -109,6 +115,7 @@ ScoutTalisman::ScoutTalisman(int level) : Talisman(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForTalismans[r];
+    profession = scout;
 }
 
 WarriorTalisman::WarriorTalisman(int level) : Talisman(level) {
@@ -116,6 +123,7 @@ WarriorTalisman::WarriorTalisman(int level) : Talisman(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForTalismans[r];
+    profession = warrior;
 }
 
 MageTalisman::MageTalisman(int level) : Talisman(level) {
@@ -123,6 +131,7 @@ MageTalisman::MageTalisman(int level) : Talisman(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForTalismans[r];
+    profession = mage;
 }
 
 
@@ -135,6 +144,7 @@ Shield::Shield(int level) : Item(level) {
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
     name = namesForShields[r];
+    profession = warrior;
 }
 
 
@@ -155,18 +165,15 @@ unique_ptr<Item> ItemFactory::createItem(int level, ItemType type, Profession pr
    }
    else if (type == armor)
    {
-       item = make_unique<Armor>(level);
+       item = make_unique<Armor>(level, profession);
    }
    else if (type == headgear)
    {
-       if (profession == warrior) {
-           item = make_unique<Helmet>(level);
-       }
-       else if (profession == scout) {
-           item = make_unique<Helmet>(level);
-       }
-       else if (profession == mage) {
+       if (profession == mage) {
            item = make_unique<MagicHat>(level);
+       }
+       else {
+           item = make_unique<Helmet>(level, profession);
        }
    }
    else if (type == talisman)

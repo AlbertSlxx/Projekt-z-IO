@@ -42,10 +42,10 @@ void Chest::openBox(shared_ptr<Hero>& h, const shared_ptr<View>& view) {
     h->setMoney(h->getMoney() + coins);
 
     view->ItemFoundInChest();
-    showItemDetails(item, h->getProf(), view);
+    view->ShowOneItem(item);
 
     view->ShowItemToChange();
-    h->showOneItem(item->getType(), h->getProf(), view);
+    h->showOneItemFromEQ(item->getType(), h->getProf(), view);
 
     view->DecisionToReplaceItem();
 
@@ -291,13 +291,13 @@ void SeeItems::Action(shared_ptr<Hero> &h, const shared_ptr<View>& view) {
     h->showEQ(view);
 
     view->ShowMerchantItemWithPrice(1, item1->getValue());
-    showItemDetails(item1, h->getProf(), view);
+    view->ShowOneItem(item1);
 
     view->ShowMerchantItemWithPrice(2, item2->getValue());
-    showItemDetails(item2, h->getProf(), view);
+    view->ShowOneItem(item2);
 
     view->ShowMerchantItemWithPrice(3, item3->getValue());
-    showItemDetails(item3, h->getProf(), view);
+    view->ShowOneItem(item3);
 
     view->ShowGoldBalance(h->getMoney());
 
@@ -330,7 +330,7 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
         }
         if (num == 1) {
             if (!bought1) {
-                showItemDetails(i1, h->getProf(), view);
+                view->ShowOneItem(i1);
                 bought1 = buyOneItem(h, i1, view);
             }
             else {
@@ -339,7 +339,7 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
         }
         else if (num == 2) {
             if (!bought2) {
-                showItemDetails(i2, h->getProf(), view);
+                view->ShowOneItem(i2);
                 bought2 = buyOneItem(h, i2, view);
             }
             else {
@@ -348,7 +348,7 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
         }
         else if (num == 3) {
             if (!bought3) {
-                showItemDetails(i3, h->getProf(), view);
+                view->ShowOneItem(i3);
                 bought3 = buyOneItem(h, i3, view);
             }
             else {

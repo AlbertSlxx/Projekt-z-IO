@@ -1,7 +1,7 @@
 #pragma once
 #ifndef EQUIPMENT_H
 #define EQUIPMENT_H
-#include "Items.h"
+#include "Views.h"
 
 
 class Equipment

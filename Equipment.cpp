@@ -3,15 +3,15 @@
 
 Equipment::Equipment(int lvl,Profession prof)
 {
-	fac = make_unique<ItemFactory>();
-	weapon_slot = fac->createItem(lvl, weapon, prof);
-	armor_slot = fac->createItem(lvl, armor, prof);
-	talisman_slot = fac->createItem(lvl, talisman, prof);
-	headgear_slot = fac->createItem(lvl, headgear, prof);
-	if (prof == warrior)
-		shield_slot = fac->createItem(lvl, shield, prof);
-	else
-		shield_slot = nullptr;
+    fac = make_unique<ItemFactory>();
+    weapon_slot = fac->createItem(lvl, weapon, prof);
+    armor_slot = fac->createItem(lvl, armor, prof);
+    talisman_slot = fac->createItem(lvl, talisman, prof);
+    headgear_slot = fac->createItem(lvl, headgear, prof);
+    if (prof == warrior)
+        shield_slot = fac->createItem(lvl, shield, prof);
+    else
+        shield_slot = nullptr;
 }
 
 bool Equipment::ChangeItem(shared_ptr<Item>& i)

@@ -340,13 +340,14 @@ shared_ptr<Hero>& Hero::getInstance()
 	}
 	return hero;
 }
-Hero::Hero()
-{
-	this->chooseClass(1);
+Hero::Hero() = default;
+
+void Hero::setClassGenerateStartEQ(int classNum) {
+    this->chooseClass(classNum);
     this->setLevel(1);
-	this->setMoney(100);
-	EQ = make_unique<Equipment>(this->getLevel(), this->Class->getProf());
-	this->setAllStats();
+    this->setMoney(100);
+    EQ = make_unique<Equipment>(this->getLevel(), this->getProf());
+    this->setAllStats();
     this->setCurrentHealth(this->getMaxHealth());
 }
 Hero::~Hero() = default;
@@ -429,121 +430,33 @@ void Hero::showStatistics(const shared_ptr<View>& view)
 	{
 	}
 }
-void Hero::showOneItem(ItemType it, Profession p, const shared_ptr<View>& view)
+void Hero::showOneItemFromEQ(ItemType it, Profession p, const shared_ptr<View>& view)
 {
-    double val1 = 0, val2 = 0, val3 = 0;
-    string mainStat, name, type;
-    int value = 0;
+    shared_ptr<Item> item;
 
-	if (it == weapon)
-	{
-        type = "weapon";
-        name = this->EQ->weapon_slot->getName();
-        val1 = this->EQ->weapon_slot->getMinDamage();
-        val2 = this->EQ->weapon_slot->getMaxDamage();
-        val3 = this->EQ->weapon_slot->getMainStat();
-        mainStat = this->EQ->weapon_slot->getMainStatName();
-        value = this->EQ->weapon_slot->getValue();
+	if (it == weapon) {
+        item = this->EQ->weapon_slot;
 	}
-	else if (it == talisman)
-	{
-        type = "talisman";
-        name = this->EQ->talisman_slot->getName();
-        val1 = this->EQ->talisman_slot->getMainStat();
-        val2 = this->EQ->talisman_slot->getCriticalChance();
-        mainStat = this->EQ->talisman_slot->getMainStatName();
-        value = this->EQ->talisman_slot->getValue();
+	else if (it == talisman) {
+        item = this->EQ->talisman_slot;
 	}
-	else if (it == shield)
-	{
-        type = "shield";
-        name = this->EQ->shield_slot->getName();
-        val1 = this->EQ->shield_slot->getDefense();
-        val2 = this->EQ->shield_slot->getBlockChance();
-        value = this->EQ->shield_slot->getValue();
+	else if (it == shield) {
+        item = this->EQ->shield_slot;
 	}
-	else if (it == armor)
-	{
-        type = "armor";
-        name = this->EQ->armor_slot->getName();
-        val1 = this->EQ->armor_slot->getDefense();
-        val2 = this->EQ->armor_slot->getHealth();
-        value = this->EQ->armor_slot->getValue();
+	else if (it == armor) {
+        item = this->EQ->armor_slot;
 	}
-	else if (it == headgear)
-	{
-        type = "headgear";
-        name = this->EQ->headgear_slot->getName();
-        val1 = this->EQ->headgear_slot->getDefense();
-
-        if (p == mage)
-        {
-            val2 = this->EQ->headgear_slot->getMainStat();
-            mainStat = this->EQ->headgear_slot->getMainStatName();
-        }
-        else
-            val2 = this->EQ->headgear_slot->getHealth();
-
-        value = this->EQ->headgear_slot->getValue();
+	else if (it == headgear) {
+        item = this->EQ->headgear_slot;
 	}
 
-    string proff;
-    if (p == warrior)
-        proff = "Warrior";
-    else if (p == scout)
-        proff = "Scout";
-    else if (p == mage)
-        proff = "Mage";
-
-    view->ShowOneItem(type, proff, value, name, val1, val2, val3, mainStat);
+    view->ShowOneItem(item);
 }
 void Hero::showEQ(const shared_ptr<View>& view)
 {
-    string prof = this->Class->getProfName();
-    string weaponName = this->EQ->weapon_slot->getName();
-    int minDamage = this->EQ->weapon_slot->getMinDamage();
-    int maxDamage = this->EQ->weapon_slot->getMaxDamage();
-    string mainStateName =this->EQ->weapon_slot->getMainStatName();
-    int weaponMainStat = this->EQ->weapon_slot->getMainStat();
-    int weaponValue = this->EQ->weapon_slot->getValue();
-    string talismanName = this->EQ->talisman_slot->getName();
-    string talismanMainStatName = this->EQ->headgear_slot->getMainStatName();
-    int talismanMainStat = this->EQ->talisman_slot->getMainStat();
-    double talismanCrit = this->EQ->talisman_slot->getCriticalChance();
-    int talismanValue = this->EQ->talisman_slot->getValue();
-    string armorName = this->EQ->armor_slot->getName();
-    int armorDef = this->EQ->armor_slot->getDefense();
-    int armorHealth = this->EQ->armor_slot->getHealth();
-    int armorValue = this->EQ->armor_slot->getValue();
-    string headGearName = this->EQ->headgear_slot->getName();
-    int headGearDef = this->EQ->headgear_slot->getDefense();
-	int headGearVal = this->getProf() == mage ? this->EQ->headgear_slot->getMainStat() : this->EQ->headgear_slot->getHealth();
-    int headgearValue = this->EQ->headgear_slot->getValue();
-    string headGearMainStat = this->getProf() == mage ? this->EQ->headgear_slot->getMainStatName() : "";
-    string shieldName = this->getProf() == warrior ? this->EQ->shield_slot->getName() : "";
-    int shieldDef= this->getProf() == warrior ? this->EQ->shield_slot->getDefense() : 0;
-    double shieldBlockChance= this->getProf() == warrior ? this->EQ->shield_slot->getBlockChance() : 0;
-    int shieldValue= this->getProf() == warrior ? this->EQ->shield_slot->getValue() : 0;
+    shared_ptr<Item> weapon = this->EQ->weapon_slot;
 
-    if (this->getProf() == mage)
-    {
-        headGearVal = this->EQ->headgear_slot->getMainStat();
-        headGearMainStat = this->EQ->headgear_slot->getMainStatName();
-    }
-    if (this->getProf() == warrior)
-    {
-        shieldName = this->EQ->shield_slot->getName();
-        shieldDef = this->EQ->shield_slot->getDefense();
-        shieldBlockChance = this->EQ->shield_slot->getBlockChance();
-        shieldValue = this->EQ->shield_slot->getValue();
-    }
-
-    view->ShowEquipment(prof, weaponName, minDamage, maxDamage, mainStateName,
-                        weaponMainStat, weaponValue, talismanName, talismanMainStatName,
-                        talismanMainStat, talismanCrit, talismanValue, armorName, armorDef,
-                        armorHealth, armorValue, headGearName, headGearDef, headGearVal,
-                        headgearValue, headGearMainStat, shieldName, shieldDef,
-                        shieldBlockChance, shieldValue);
+    view->ShowEquipment(weapon, this->EQ->armor_slot, this->EQ->headgear_slot, this->EQ->talisman_slot, this->EQ->shield_slot);
 }
 void Hero::setAllStats()
 {

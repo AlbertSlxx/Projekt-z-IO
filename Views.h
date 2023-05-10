@@ -2,6 +2,7 @@
 #ifndef VIEWS_H
 #define VIEWS_H
 #include <string>
+#include "Items.h"
 
 
 class View {
@@ -107,21 +108,17 @@ public:
     virtual void DodgedHit(string ch1, string ch2) = 0;
     virtual void BlockedHit(string ch1, string ch2) = 0;
 
-    virtual void ShowPossibleClassesToChoose(string name) = 0;
+    virtual void ShowPossibleClassesToChoose() = 0;
     virtual void IncorrectNumber(int min, int max) = 0;
     virtual void ShowChosenClass(int ch) = 0;
 
     virtual void WriteHeroName() = 0;
 
-    virtual void ShowEquipment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
-                               string talismanName, string talismanMainStatName, int talismanMainStat, double talismanCrit, int talismanValue,
-                               string armorName, int armorDef, int armorHealth, int armorValue,
-                               string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainStat,
-                               string shieldName, int shieldDef, double shieldBlockChance, int shieldValue) = 0;
+    virtual void ShowEquipment(shared_ptr<Item> weapon, shared_ptr<Item> armor, shared_ptr<Item> headgear, shared_ptr<Item> talisman, shared_ptr<Item> shield) = 0;
     virtual void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
                                 int maxAttack, double crit, int def, int money, double block) = 0;
 
-    virtual void ShowOneItem(string type, string prof, int value, string name, double val1, double val2, double val3, string mainStatName) = 0;
+    virtual void ShowOneItem(shared_ptr<Item> item) = 0;
 
     virtual void CompletedEqChanging() = 0;
     virtual void BreakLine() = 0;
@@ -231,21 +228,17 @@ public:
     void DodgedHit(string ch1, string ch2) override;
     void BlockedHit(string ch1, string ch2) override;
 
-    void ShowPossibleClassesToChoose(string name) override;
+    void ShowPossibleClassesToChoose() override;
     void IncorrectNumber(int min, int max) override;
     void ShowChosenClass(int ch) override;
 
     void WriteHeroName() override;
 
-    void ShowEquipment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
-                       string talismanName, string talismanMainStatName, int talismanMainStat, double talismanCrit, int talismanValue,
-                       string armorName, int armorDef, int armorHealth, int armorValue,
-                       string headGearName, int headGearDef, int headGearVal = 0, int headgearValue = 0, string headGearMainStat = "",
-                       string shieldName = "", int shieldDef = 0, double shieldBlockChance = 0, int shieldValue = 0) override;
+    void ShowEquipment(shared_ptr<Item> weapon, shared_ptr<Item> armor, shared_ptr<Item> headgear, shared_ptr<Item> talisman, shared_ptr<Item> shield) override;
     void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
                         int maxAttack, double crit, int def, int money, double block) override;
 
-    void ShowOneItem(string type, string prof, int value, string name, double val1 = 0, double val2 = 0, double val3 = 0, string mainStatName = "") override;
+    void ShowOneItem(shared_ptr<Item> item) override;
 
     void CompletedEqChanging() override;
     void BreakLine() override;

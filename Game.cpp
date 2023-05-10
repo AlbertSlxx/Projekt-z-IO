@@ -100,7 +100,7 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
 }
 
 void Game::heroSetClass() {
-    view->ShowPossibleClassesToChoose(hero->getName());
+    view->ShowPossibleClassesToChoose();
 
     char c;
     cin >> c;
@@ -111,7 +111,7 @@ void Game::heroSetClass() {
     }
 
     int ch = (int)c - 48;
-    hero->chooseClass(ch);
+    hero->setClassGenerateStartEQ(ch);
 
     view->ShowChosenClass(ch);
 }
@@ -129,8 +129,8 @@ void Game::play()
     view = make_unique<TXTView>();
 
     hero = Hero::getInstance();
-    heroSetName();
     heroSetClass();
+    heroSetName();
 
     o = make_shared<Observer>(hero);
     o->addToObserver();

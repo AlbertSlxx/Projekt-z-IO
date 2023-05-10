@@ -113,9 +113,10 @@ public:
 	static shared_ptr<Hero>& getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
+    void setClassGenerateStartEQ(int classNum);
 	void showStatistics(const shared_ptr<View>& view);
 	void showEQ(const shared_ptr<View>& view);
-	void showOneItem(ItemType, Profession, const shared_ptr<View>& view);
+	void showOneItemFromEQ(ItemType it, Profession p, const shared_ptr<View>& view);
 	void setAllStats();
 	void chooseClass(int c);
 	void setMaxHealth(int);

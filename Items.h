@@ -6,7 +6,6 @@
 #include <string>
 #include <ctime>
 #include "Names.h"
-#include "Views.h"
 using namespace std;
 
 
@@ -34,6 +33,7 @@ protected:
     int value{};
     string name;
     ItemType type;
+    Profession profession;
 
 public:
     explicit Item(int level) {
@@ -43,6 +43,7 @@ public:
     int getItemID() const { return item_ID; }
     string getName() const { return name; }
     ItemType getType() const { return type; }
+    Profession getProffesion() const { return profession; }
     virtual int getMainStat() const { return 0; }
     virtual string getMainStatName() const { return ""; }
     virtual int getDefense() const { return 0; }
@@ -104,7 +105,7 @@ protected:
     int health;
 
 public:
-    explicit Armor(int level);
+    explicit Armor(int level, Profession proff);
     int getDefense() const override { return defense; }
     int getHealth() const override { return health; }
 };
@@ -124,7 +125,7 @@ protected:
     int health;
 
 public:
-    explicit Helmet(int level);
+    explicit Helmet(int level, Profession proff);
     int getHealth() const override { return health; }
     string getMainStatName() const override { return "strength"; }
 };
@@ -196,30 +197,5 @@ class ItemFactory {
 public:
     static unique_ptr<Item> createItem(int level, ItemType type, Profession profession);
 };
-
-static void showItemDetails(shared_ptr<Item>& item, Profession prof, const shared_ptr<View>& view)
-{
-    string type, proff;
-
-    if (item->getType() == weapon)
-        type = "weapon";
-    else if (item->getType() == armor)
-        type = "armor";
-    else if (item->getType() == headgear)
-        type = "headgear";
-    else if (item->getType() == talisman)
-        type = "talisman";
-    else if (item->getType() == shield)
-        type = "shield";
-
-    if (prof == warrior)
-        proff = "Warrior";
-    else if (prof == scout)
-        proff = "Scout";
-    else if (prof == mage)
-        proff = "Mage";
-
-    view->ShowOneItem(type, proff, item->getValue(), item->getName(), item->getMinDamage(), item->getMaxDamage(), item->getMainStat(), item->getMainStatName());
-}
 
 #endif

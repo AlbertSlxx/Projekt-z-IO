@@ -1,7 +1,7 @@
 #pragma once
 #ifndef EVENTS_H
 #define EVENTS_H
-#include "Character.h"
+#include "Views.h"
 #include <vector>
 #include "Strategy.h"
 
